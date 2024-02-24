@@ -208,8 +208,8 @@ class TeachingUI():
 
         # Mysterious variables
         self.dist_g=0.065
-        self.width_s=3.
-        self.height_s=4.
+        self.width_s = 2.
+        self.height_s = 3.
         self.focal_length = 3400
         self.img_size=(3008,2000)
         self.width_np=np.arange(0,self.width_s)

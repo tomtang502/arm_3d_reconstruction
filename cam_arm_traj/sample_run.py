@@ -1,8 +1,12 @@
 from utils.teaching_ui import *
 from utils.traj_visual import *
+from move_arm import *
 
 sample_name = "triangle0"
-use_sample = True
+use_sample = False
+initial_pos = torch.tensor([0.42, 0, 0.2]) #xyx in arm angle 0.42, 0, 0.2 in meter
+# img init loc fron will [0.2, -0.2, 0.15]
+initial_ori = torch.tensor([0.0, 0.0, 0.0])
 
 if use_sample:
     all_traj, inter_points_list, orientation_values = torch.load(f'sample_motion/{sample_name}.pt')
@@ -47,8 +51,7 @@ else:
 
     root.mainloop()
 
-    initial_pos = torch.tensor([0.2, -0.2, 0.15])
-    initial_ori = torch.tensor([0.0, 0.0, 0.0])
+    
     # goal_pos=inter_points_list[0]
     # goal_ori=to_radians(torch.tensor([90.0, -90.0, 0.0]))
     # goal_ori=None
@@ -60,7 +63,13 @@ else:
     print(f"--------Caculated Trajectory with shape of ({all_traj.shape})-------")
 
     pts = [all_traj, tu.inter_points_list, tu.orientation_values]
-    name = "triangle0"
-    torch.save(pts, f'sample_motion/{name}.pt')
+    name = "triangle0ori"
+    torch.save(pts, f'sample_motion/2151{name}.pt')
 
-show_3d_traj(inter_points_list, all_traj)
+
+for i in range(0, all_traj.shape[0]):
+    print(all_traj[i])
+    #print(orientation_values[i])
+print(all_traj.shape) #orientation_values.shape)
+all_traj = convert_tag_to_arm_coordinates(all_traj, [0.21, 0.0, 0.1])
+show_3d_traj(inter_points_list, all_traj[:,3:6])
