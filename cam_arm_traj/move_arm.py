@@ -40,7 +40,7 @@ def convert_tag_to_arm_coordinates(traj, init_pos, init_ori = default_ori):
 
     return np.hstack((traj, zeros_column))
 
-
+# buggy
 def run_traj(all_traj, init_loc=None, steps_lim = 1000000):
     arm_traj = convert_tag_to_arm_coordinates(all_traj, init_loc)
     np.set_printoptions(precision=3, suppress=True)
@@ -63,17 +63,66 @@ def run_traj(all_traj, init_loc=None, steps_lim = 1000000):
     arm.backToStart()
     arm.loopOff()
 
+
+# This does not consider orientation values
+# Return a list of 3d coordinates key points on trajectory
+def inter_points_format(inter_points_list):
+    kpt = []
+    for inter_points in inter_points_list:
+        mean_inter_p=inter_points.mean(axis=0)
+        mean_inter_p[0] = mean_inter_p[0] * -1.
+        print(mean_inter_p)
+        kpt.append(mean_inter_p[[1, 0, 2],])
+
+    return kpt
+
+# from pt1 to pt2
+def cal_vel(pt1, pt2, first_move=False, ori = np.array([0,0,0])):
+    v = pt2
+    if not first_move:
+        v = v - pt1
+    
+    return np.hstack([v, ori])
+    
+def move_between_kps(kps, init_loc=None, steps_per_transition = 3, ori = default_ori):
+    assert(steps_per_transition > 0)
+    init_loc = np.array(init_loc)
+    dests = []
+    np.set_printoptions(precision=3, suppress=True)
+    arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
+    armState = unitree_arm_interface.ArmFSMState
+    print(all_traj.shape[0])
+    arm.loopOn()
+    arm.backToStart()
+    arm.startTrack(armState.CARTESIAN)
+    angular_vel = 0.3
+    linear_vel = 0.3
+    for i in range(len(kps)):
+        des = kps[i]
+        if init_loc != None:
+            des = des + init_loc
+        if i == 0:
+            vel = cal_vel(None, des, first_move=True, ori=ori)
+        else:
+            vel = cal_vel(dests[-1], des, first_move=False, ori=ori)
+        for j in range(steps_per_transition):
+            arm.cartesianCtrlCmd(vel, angular_vel, linear_vel)
+            time.sleep(arm._ctrlComp.dt)
+        dests.append(des)
+    arm.backToStart()
+    arm.loopOff()
+
 """
 (roll pitch yaw x y z) + (gripper if cartisian)
 """
 if __name__ == "__main__":
-    test_init_pos = [0.21, 0.0, 0.1]
+    test_init_pos = [0.35, 0.0, 0.15]
 
-    sample_name = "square0"
+    sample_name = "23triangle0"
     all_traj, inter_points_list, orientation_values = torch.load(f'sample_motion/{sample_name}.pt')
-    div = 1 #all_traj.shape[0]//
-    all_traj = all_traj[::div, :]
-    print(all_traj.shape)
+    # div = 1 #all_traj.shape[0]//
+    # all_traj = all_traj[::div, :]
+    print(inter_points_list[0].shape)
     # arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
     # armState = unitree_arm_interface.ArmFSMState
     # arm.loopOn()
@@ -81,5 +130,5 @@ if __name__ == "__main__":
     # arm.backToStart()
     # arm.loopOff()
 
-    run_traj(all_traj, test_init_pos)
+    move_between_kps(inter_points_format(inter_points_list), test_init_pos, 3)
     

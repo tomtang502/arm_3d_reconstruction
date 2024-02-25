@@ -10,7 +10,7 @@ objp[:,:2] = np.mgrid[0:8,0:14].T.reshape(-1,2)
 # Arrays to store object points and image points from all the images.
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
-images = glob.glob('*.jpg')
+images = glob.glob('calib_arm_cam/*.jpg')
 for fname in images:
     img = cv.imread(fname)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)

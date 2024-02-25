@@ -17,7 +17,7 @@ import torchvision.transforms as transforms
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-at_detector = Detector(families='tag25h9',
+at_detector = Detector(families='tag36h11',
                        nthreads=1,
                        quad_decimate=1.0,
                        quad_sigma=0.0,
@@ -210,8 +210,8 @@ class TeachingUI():
         self.dist_g=0.065
         self.width_s = 2.
         self.height_s = 3.
-        self.focal_length = 3400
-        self.img_size=(3008,2000)
+        self.img_size=(680,480)
+        self.focal_length = 727
         self.width_np=np.arange(0,self.width_s)
         self.height_np=np.arange(0,self.height_s)
         self.w, self.h = np.meshgrid(self.width_np, self.height_np, indexing='ij')
@@ -224,13 +224,21 @@ class TeachingUI():
         self.mtx=np.array([[self.focal_length, 0, self.center[0]],
                            [0, self.focal_length, self.center[1]],
                            [0, 0, 1]], dtype = "double")
+        """
+        mtx
+        [[727.8371582    0.         332.0452793 ]
+        [  0.         725.80517578 277.42752888]
+        [  0.           0.           1.        ]]
+        """
+        print(f"mtx {self.mtx}")
         self.distortion_coeffs = np.array([])
-        self.camera_params_c=[self.focal_length,self.focal_length,1504,1000]
+        self.camera_params_c=[self.focal_length,self.focal_length,self.img_size[0]//2,self.img_size[1]//2]
         self.resize_shape=(100,100)
-        self.resize_transform = transforms.Resize(self.resize_shape)
+        self.resize_transform = transforms.Resize(self.resize_shape, antialias=True)
         self.mtx_s=np.array([[self.focal_length/(self.img_size[0]/self.resize_shape[0]), 0, self.resize_shape[0]/2],
                     [0, self.focal_length/(self.img_size[1]/self.resize_shape[1]), self.resize_shape[1]/2],
                     [0, 0, 1]], dtype = "double")
+        print(f"mtx_s: {self.mtx_s}")
         self.grid_2d=torch.tensor(np.indices(self.resize_shape).reshape(2, -1).T)
         self.grid_2d_w=torch.cat([self.grid_2d,torch.ones((len(self.grid_2d),1))],dim=1).double()
 
@@ -242,11 +250,12 @@ class TeachingUI():
             else:
                 self.image_path2 = file_path
             image = Image.open(file_path)
-            image = image.resize((600, 400))  # Resize the image to 1200x800
+            print(f"image size is {image.size}")
+            image = image.resize((640, 480))  # Resize the image to 1200x800
             photo = ImageTk.PhotoImage(image)
             canvas.image = image  # Keep a reference to the image
             canvas.photo = photo  # Keep a reference to the Tkinter PhotoImage
-            canvas.config(width=600, height=400)
+            canvas.config(width=640, height=480)
             canvas.create_image(0, 0, image=photo, anchor='nw')
             self.status_label.config(text=f"Image {image_number} loaded")
 
@@ -355,6 +364,7 @@ class TeachingUI():
         tags = at_detector.detect(img, estimate_tag_pose=True,
                                 camera_params=self.camera_params_c,
                                 tag_size=0.05)
+        print(f"total number of tags detected: {len(tags)}")
         tags_cent_list=[]
         for i in range(len(tags)):
             tags_cent_list.append(tags[i].center)

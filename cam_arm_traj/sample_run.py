@@ -2,8 +2,8 @@ from utils.teaching_ui import *
 from utils.traj_visual import *
 from move_arm import *
 
-sample_name = "triangle0"
-use_sample = False
+sample_name = "23triangle0"
+use_sample = True
 initial_pos = torch.tensor([0.42, 0, 0.2]) #xyx in arm angle 0.42, 0, 0.2 in meter
 # img init loc fron will [0.2, -0.2, 0.15]
 initial_ori = torch.tensor([0.0, 0.0, 0.0])
@@ -64,7 +64,7 @@ else:
 
     pts = [all_traj, tu.inter_points_list, tu.orientation_values]
     name = "triangle0ori"
-    torch.save(pts, f'sample_motion/2151{name}.pt')
+    torch.save(pts, f'sample_motion/23{name}.pt')
 
 
 for i in range(0, all_traj.shape[0]):
@@ -72,4 +72,7 @@ for i in range(0, all_traj.shape[0]):
     #print(orientation_values[i])
 print(all_traj.shape) #orientation_values.shape)
 all_traj = convert_tag_to_arm_coordinates(all_traj, [0.21, 0.0, 0.1])
-show_3d_traj(inter_points_list, all_traj[:,3:6])
+# buggy, see notes
+# show_3d_traj(inter_points_list, all_traj[:,3:6])
+# print(orientation_values)
+show_3d_kpt(inter_points_list)

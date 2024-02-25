@@ -28,3 +28,29 @@ def show_3d_traj(inter_points_list, all_traj):
     ax.set_ylim(-0.4,0.4)
     ax.set_zlim(-0.4,0.4)
     fig.show()
+
+def show_3d_kpt(inter_points_list):
+    fig = plt.figure(figsize=(12,12))
+    ax = fig.add_subplot(111, projection='3d')
+    kpt = []
+
+    for inter_points in inter_points_list:
+        mean_inter_p=inter_points.mean(axis=0)
+
+        ax.scatter(mean_inter_p[0].detach().cpu(),
+            mean_inter_p[1].detach().cpu(),
+            mean_inter_p[2].detach().cpu(),s=80,marker='X',c='r')
+        kpt.append(mean_inter_p)
+
+    # kpt now a list of (3,) corresponding to y, -x, z
+    ax.view_init(elev=70, azim=-0)
+    ax.set_xlim(-0.4,0.4)
+    ax.set_ylim(-0.4,0.4)
+    ax.set_zlim(-0.4,0.4)
+    ax.set_xlabel('X axis label')
+    ax.set_ylabel('Y axis label')
+    ax.set_zlabel('Z axis label')
+
+    fig.show()
+    return kpt
+    

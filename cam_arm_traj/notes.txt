@@ -1,0 +1,6 @@
+Buggy:
+Teaching UI visualization of clusters (neglected)
+all_traj trajectory calculation (neglected)
+
+Not Yet Implemented:
+Orientation values

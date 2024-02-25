@@ -22,7 +22,7 @@ while True:
         elif keyval == ord(' '):  # 32 is the ASCII code for the space bar
         # Save the frame as an image file
             print("start image save")
-            cv2.imwrite('captured_image'+str(idx)+'.jpg', frame1)
+            cv2.imwrite('calib_arm_cam/calib_arm'+str(idx)+'.jpg', frame1)
             print("image saved!")
             idx = idx+1
 
