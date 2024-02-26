@@ -207,10 +207,10 @@ class TeachingUI():
         self.red_line_ids_canvas2 = []
 
         # Mysterious variables
-        self.dist_g=0.065
+        self.dist_g= 0.065
         self.width_s = 2.
         self.height_s = 3.
-        self.img_size=(680,480)
+        self.img_size =(640,480)
         self.focal_length = 727
         self.width_np=np.arange(0,self.width_s)
         self.height_np=np.arange(0,self.height_s)
@@ -232,7 +232,7 @@ class TeachingUI():
         """
         print(f"mtx {self.mtx}")
         self.distortion_coeffs = np.array([])
-        self.camera_params_c=[self.focal_length,self.focal_length,self.img_size[0]//2,self.img_size[1]//2]
+        self.camera_params_c=[self.focal_length,self.focal_length,self.center[0],self.center[1]]
         self.resize_shape=(100,100)
         self.resize_transform = transforms.Resize(self.resize_shape, antialias=True)
         self.mtx_s=np.array([[self.focal_length/(self.img_size[0]/self.resize_shape[0]), 0, self.resize_shape[0]/2],
@@ -412,7 +412,7 @@ class TeachingUI():
                 'pitch': pitch_scale.get(),
                 'roll': roll_scale.get()
             }
-            cluster_mean=self.mean_inter_p_list[cluster_id]
+            cluster_mean=self.mean_inter_p_list[cluster_id] #debug
             ypr=torch.tensor([yaw_scale.get(),pitch_scale.get(),roll_scale.get()])
             
             self.del_arrows(cluster_id)
@@ -466,14 +466,14 @@ class TeachingUI():
         for V, T, canvas in zip(Vs, Ts, canvases):
             scatter, _ = cv2.projectPoints(np.array(inter_points.detach().cpu()), V, T, self.mtx, 
                                            self.distortion_coeffs)
-            scatter_r = (scatter / 5)[:, 0]
+            scatter_r = (scatter / 1)[:, 0] # DEBUG wrong plot done here
             self.scatter_plot_points(canvas, scatter_r)
 
     # Refactored main function
     def plot_and_clear(self):
         #clear_canvases([canvas1, canvas2])
         self.clear_canvases()
-
+        # DEBUG
         self.Rs = [self.get_rot_t(self.image_path1, self.t_grid_3d)[0], 
                    self.get_rot_t(self.image_path2, self.t_grid_3d)[0]]
         self.Ts = [self.get_rot_t(self.image_path1, self.t_grid_3d)[1], 

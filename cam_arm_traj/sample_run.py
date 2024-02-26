@@ -3,7 +3,8 @@ from utils.traj_visual import *
 from move_arm import *
 
 sample_name = "23triangle0"
-use_sample = True
+use_sample = 0
+visualize_traj = 1
 initial_pos = torch.tensor([0.42, 0, 0.2]) #xyx in arm angle 0.42, 0, 0.2 in meter
 # img init loc fron will [0.2, -0.2, 0.15]
 initial_ori = torch.tensor([0.0, 0.0, 0.0])
@@ -63,16 +64,20 @@ else:
     print(f"--------Caculated Trajectory with shape of ({all_traj.shape})-------")
 
     pts = [all_traj, tu.inter_points_list, tu.orientation_values]
-    name = "triangle0ori"
+    name = "ui_debug1"
     torch.save(pts, f'sample_motion/23{name}.pt')
 
 
-for i in range(0, all_traj.shape[0]):
-    print(all_traj[i])
+# for i in range(0, all_traj.shape[0]):
+#     print(all_traj[i])
     #print(orientation_values[i])
 print(all_traj.shape) #orientation_values.shape)
-all_traj = convert_tag_to_arm_coordinates(all_traj, [0.21, 0.0, 0.1])
-# buggy, see notes
-# show_3d_traj(inter_points_list, all_traj[:,3:6])
+if visualize_traj:
+    if use_sample:
+        all_traj = convert_tag_to_arm_coordinates(all_traj, [0.21, 0.0, 0.1])
+    # buggy, see notes
+        show_3d_traj(inter_points_list, all_traj[:,3:6])
+    else:
+        show_3d_traj(inter_points_list, all_traj)
 # print(orientation_values)
 show_3d_kpt(inter_points_list)
