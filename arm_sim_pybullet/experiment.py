@@ -21,7 +21,7 @@ p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
 p.setGravity(0,0,-9.8)
 #p.setTimeStep(0.002)
 planeId = p.loadURDF("plane.urdf")
-startPos = [0,0,0.5]
+startPos = [0,0,0]
 startOrientation = p.getQuaternionFromEuler([0,0,0])
 # set the center of mass frame (loadURDF sets base link frame) 
 # startPos/Ornp.resetBasePositionAndOrientation(boxId, startPos, startOrientation)
@@ -48,22 +48,23 @@ target_pos = torch.tensor([0.0, 0.20, 0.0, 0.48, 0.0, 0.20])
 init_pos = torch.cat((init_pos[-3:], init_pos[:3]))
 target_pos = torch.cat((target_pos[-3:], target_pos[:3]))
 
-# link_name = "gripperStator"
-# chain = load_chain_from_urdf("z1g.urdf", link_name)
+link_name = "gripperStator"
+chain = load_chain_from_urdf("z1_description/z1_gripper.urdf", link_name)
 
-# jangs_vel_list, jangs_pos_list = plan_motion(chain, init_state, init_pos, target_pos, dt = 1./240., 
-#                                              pos_diff_epsilon=0.0018, const_vel=0.10)
-# base_vel = torch.tensor([0.0])
-# for i in range (len(jangs_pos_list)):
-#     cur_jts_vel = torch.cat((base_vel, jangs_vel_list[i].reshape((6,))))
-#     p.setJointMotorControlArray(zid, jt_idxs, p.VELOCITY_CONTROL, 
-#                                 targetVelocities = cur_jts_vel)
+jangs_vel_list, jangs_pos_list = plan_motion(chain, init_state, init_pos, target_pos, dt = 1./240., 
+                                             pos_diff_epsilon=0.0018, const_vel=0.10)
+base_vel = torch.tensor([0.0])
+for i in range (len(jangs_pos_list)):
+    cur_jts_vel = torch.cat((base_vel, jangs_vel_list[i].reshape((6,)), base_vel, base_vel))
+    p.setJointMotorControlArray(zid, jt_idxs, p.VELOCITY_CONTROL, 
+                                targetVelocities = cur_jts_vel)
 
-#     p.stepSimulation()
-#     time.sleep(1./240.)
+    p.stepSimulation()
+    time.sleep(1./240.)
 
 print(p.getLinkState(zid, 6))
 for i in range(10000):
+    #p.stepSimulation()
     time.sleep(1./240.)
 
 

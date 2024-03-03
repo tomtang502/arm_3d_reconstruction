@@ -51,10 +51,10 @@ def convert_to_tensor(input_data):
 
 def load_chain_from_urdf(file_name, link_name, device = torch.device("cpu")):
     # Suppress stderr, the is for urdf that includes hardware description like z1 arm
-    #sys.stderr = open(os.devnull, 'w')
+    sys.stderr = open(os.devnull, 'w')
     chain = pk.build_serial_chain_from_urdf(open(file_name).read(), link_name)
     # Restore stderr
-    #sys.stderr = sys.__stderr__
+    sys.stderr = sys.__stderr__
     return chain
 
 """
@@ -67,13 +67,12 @@ closest to the base (J1) to joint angle closest to the end-effector (J6).
   of the target position
 """
 def plan_motion(chain, init_state, init_pos, target_pos, dt=0.002, const_vel=0.10, tmax=20,
-                pos_diff_epsilon=0.0016, joint_angle_shape=joint_angle_shape):
+                pos_diff_epsilon=0.001, joint_angle_shape=joint_angle_shape):
     init_pos = convert_to_tensor(init_pos) 
     tar_pos = convert_to_tensor(target_pos).reshape(joint_angle_shape)
     # all following operations done in tensor
     cur_pos = init_pos.reshape(joint_angle_shape)
     cur_state = torch.clamp(init_state.reshape(joint_angle_shape), joint_min, joint_max).reshape(joint_angle_shape)
-    keep_move = True
     jangs_vel_list = list()
     jangs_pos_list = list()
 
@@ -82,7 +81,7 @@ def plan_motion(chain, init_state, init_pos, target_pos, dt=0.002, const_vel=0.1
     for i in range(iterations):
         dist = torch.norm(tar_pos - cur_pos)
         if dist < pos_diff_epsilon:
-            print(f"term iters = {i}")
+            print(f"term iters = {i}/{iterations}")
             break
         ee_vel = (tar_pos - cur_pos) / dist * const_vel
         

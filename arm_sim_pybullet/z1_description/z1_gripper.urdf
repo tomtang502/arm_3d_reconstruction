@@ -35,7 +35,7 @@
     </visual>
     <collision>
       <geometry>
-        <cylinder length="0.051" radius="${0.065/2.0}"/>
+        <cylinder length="0.051" radius="0.0325"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0.0255"/>
     </collision>
@@ -51,7 +51,7 @@
     <child link="link01"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="1.0" friction="1.0"/>
-    <limit effort="30.0" velocity="3.1415" lower="${-PI*150/180}" upper="${PI*150/180}"/>
+    <limit effort="30.0" velocity="3.1415" lower="-2.6179938779914944" upper="2.6179938779914944"/>
   </joint>
   <link name="link01">
     <visual>
@@ -72,7 +72,7 @@
     <child link="link02"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="2.0" friction="2.0"/>
-    <limit effort="60.0" velocity="3.1415" lower="0.0" upper="${PI*170/180}"/>
+    <limit effort="60.0" velocity="3.1415" lower="0.0" upper="2.9670597283903604"/>
   </joint>
   <link name="link02">
     <visual>
@@ -83,19 +83,19 @@
     </visual>
     <collision>
       <geometry>
-        <cylinder length="0.102" radius="${0.065/2.0}"/>
+        <cylinder length="0.102" radius="0.0325"/>
       </geometry>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
     </collision>
     <collision>
       <geometry>
-        <cylinder length="0.235" radius="${0.045/2.0}"/>
+        <cylinder length="0.235" radius="0.0225"/>
       </geometry>
       <origin rpy="0 1.5707963267948966 0" xyz="-0.16249999999999998 0 0"/>
     </collision>
     <collision>
       <geometry>
-        <cylinder length="0.051" radius="${0.065/2.0}"/>
+        <cylinder length="0.051" radius="0.0325"/>
       </geometry>
       <origin rpy="1.5707963267948966 0 0" xyz="-0.35 0 0"/>
     </collision>
@@ -111,7 +111,7 @@
     <child link="link03"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="1.0" friction="1.0"/>
-    <limit effort="30.0" velocity="3.1415" lower="${-PI*165/180}" upper="0.0"/>
+    <limit effort="30.0" velocity="3.1415" lower="-2.8797932657906435" upper="0.0"/>
   </joint>
   <link name="link03">
     <visual>
@@ -122,13 +122,13 @@
     </visual>
     <collision>
       <geometry>
-        <cylinder length="0.116" radius="${0.04/2.0}"/>
+        <cylinder length="0.116" radius="0.02"/>
       </geometry>
       <origin rpy="0 1.5707963267948966 0" xyz="0.128 0 0.055"/>
     </collision>
     <collision>
       <geometry>
-        <cylinder length="0.059" radius="${0.065/2.0}"/>
+        <cylinder length="0.059" radius="0.0325"/>
       </geometry>
       <origin rpy="0 1.5707963267948966 1.5707963267948966" xyz="0.2205 0 0.055"/>
     </collision>
@@ -144,7 +144,7 @@
     <child link="link04"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="1.0" friction="1.0"/>
-    <limit effort="30.0" velocity="3.1415" lower="${-PI*87/180}" upper="${PI*87/180}"/>
+    <limit effort="30.0" velocity="3.1415" lower="-1.5184364492350666" upper="1.5184364492350666"/>
   </joint>
   <link name="link04">
     <visual>
@@ -155,7 +155,7 @@
     </visual>
     <collision>
       <geometry>
-        <cylinder length="0.067" radius="${0.065/2.0}"/>
+        <cylinder length="0.067" radius="0.0325"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0.072 0 0"/>
     </collision>
@@ -171,7 +171,7 @@
     <child link="link05"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="1.0" friction="1.0"/>
-    <limit effort="30.0" velocity="3.1415" lower="${-PI*77/180}" upper="${PI*77/180}"/>
+    <limit effort="30.0" velocity="3.1415" lower="-1.3439035240356338" upper="1.3439035240356338"/>
   </joint>
   <link name="link05">
     <visual>
@@ -192,7 +192,7 @@
     <child link="link06"/>
     <axis xyz="1 0 0"/>
     <dynamics damping="1.0" friction="1.0"/>
-    <limit effort="30.0" velocity="3.1415" lower="${-PI*160/180}" upper="${PI*160/180}"/>
+    <limit effort="30.0" velocity="3.1415" lower="-2.792526803190927" upper="2.792526803190927"/>
   </joint>
   <link name="link06">
     <visual>
@@ -203,7 +203,7 @@
     </visual>
     <collision>
       <geometry>
-        <cylinder length="0.051" radius="${0.065/2.0}"/>
+        <cylinder length="0.051" radius="0.0325"/>
       </geometry>
       <origin rpy="0 1.5707963267948966 0" xyz="0.0255 0 0"/>
     </collision>
@@ -241,7 +241,7 @@
     <child link="gripperMover"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="1.0" friction="1.0"/>
-    <limit effort="30.0" velocity="3.1415" lower="${-PI*90/180}" upper="0.0"/>
+    <limit effort="30.0" velocity="3.1415" lower="-1.5707963267948966" upper="0.0"/>
   </joint>
   <link name="gripperMover">
     <visual>
