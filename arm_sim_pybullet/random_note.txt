@@ -1,4 +1,25 @@
-_____________Joint idx: 1______________________________
+z1 has 9 joints
+--------------------Begin--------------------
+______________________________Joint idx: 0______________________________
+jointIndex : 0
+jointName : b'base_static_joint'
+jointType : 4
+qIndex : -1
+uIndex : -1
+flags : 0
+jointDamping : 0.0
+jointFriction : 0.0
+jointLowerLimit : 0.0
+jointUpperLimit : -1.0
+jointMaxForce : 0.0
+jointMaxVelocity : 0.0
+linkName : b'link00'
+jointAxis : (0.0, 0.0, 0.0)
+parentFramePos : (0.0, 0.0, 0.0)
+parentFrameOrn : (0.0, 0.0, 0.0, 1.0)
+parentIndex : -1
+------------------------------End Split------------------------------
+______________________________Joint idx: 1______________________________
 jointIndex : 1
 jointName : b'joint1'
 jointType : 0
@@ -111,4 +132,42 @@ jointAxis : (1.0, 0.0, 0.0)
 parentFramePos : (0.01798467, 0.0, -0.00646316)
 parentFrameOrn : (0.0, 0.0, 0.0, 1.0)
 parentIndex : 5
+------------------------------End Split------------------------------
+______________________________Joint idx: 7______________________________
+jointIndex : 7
+jointName : b'gripperStator'
+jointType : 4
+qIndex : -1
+uIndex : -1
+flags : 0
+jointDamping : 0.0
+jointFriction : 0.0
+jointLowerLimit : 0.0
+jointUpperLimit : -1.0
+jointMaxForce : 0.0
+jointMaxVelocity : 0.0
+linkName : b'gripperStator'
+jointAxis : (0.0, 0.0, 0.0)
+parentFramePos : (0.026843099999999998, 0.00017355, 0.00143876)
+parentFrameOrn : (0.0, 0.0, 0.0, 1.0)
+parentIndex : 6
+------------------------------End Split------------------------------
+______________________________Joint idx: 8______________________________
+jointIndex : 8
+jointName : b'jointGripper'
+jointType : 0
+qIndex : 13
+uIndex : 12
+flags : 1
+jointDamping : 1.0
+jointFriction : 1.0
+jointLowerLimit : -1.5707963267948966
+jointUpperLimit : 0.0
+jointMaxForce : 30.0
+jointMaxVelocity : 3.1415
+linkName : b'gripperMover'
+jointAxis : (0.0, 1.0, 0.0)
+parentFramePos : (0.0013557299999999994, 0.00035819, 0.00249162)
+parentFrameOrn : (0.0, 0.0, 0.0, 1.0)
+parentIndex : 7
 ------------------------------End Split------------------------------

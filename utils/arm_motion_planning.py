@@ -23,6 +23,8 @@ Upper:
  math.pi*4/9, 
  math.pi*17/36, 
  math.pi*8/9]
+
+GRIPPER IS NOT INCLUDED HERE
 """
 joint_angle_shape = (6, 1)
 joint_min = torch.tensor([-2.6179938779914944, 
@@ -98,7 +100,13 @@ def plan_motion(chain, init_state, init_pos, target_pos, dt=0.002, const_vel=0.1
         cur_pos = torch.matmul(J, jangs_vel) * dt + cur_pos
     return jangs_vel_list, jangs_pos_list
 
+
+"""
+The following code is for testing this single module, 
+and can serve as a template for function usage.  
+"""
 if __name__ ==  "__main__":
+    
     # Sample joint angles (ensure this tensor is on the same device and dtype as your limits)
     init_state = torch.tensor([-0.001, 0.006, -0.031, -0.079, -0.002, 0.001])
     # from unitree as unitree format
