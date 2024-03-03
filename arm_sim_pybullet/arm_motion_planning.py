@@ -51,43 +51,40 @@ def convert_to_tensor(input_data):
 
 def load_chain_from_urdf(file_name, link_name, device = torch.device("cpu")):
     # Suppress stderr, the is for urdf that includes hardware description like z1 arm
-    sys.stderr = open(os.devnull, 'w')
+    #sys.stderr = open(os.devnull, 'w')
     chain = pk.build_serial_chain_from_urdf(open(file_name).read(), link_name)
     # Restore stderr
-    sys.stderr = sys.__stderr__
+    #sys.stderr = sys.__stderr__
     return chain
-
-# init_pos, target_pos are row vector tensor of (x, y, z)
-def ee_velocity(init_pos, target_pos, t):
-    return (target_pos - init_pos) / t
 
 """
 init_pos, tar_pos: column vectors in (x, y, z, roll, pitch, yaw)
 init_state: a row vector from top to bottom in the order of from joint angle 
 closest to the base (J1) to joint angle closest to the end-effector (J6).
 # Assume input state is valid, which is within bound
-
+# tmax should be in second
+# pos_diff_epsilon is measured in m, and the motion terminates when the position within this range
+  of the target position
 """
-def plan_motion(chain, init_state, init_pos, target_pos, dt=0.002, const_vel = 0.10, 
-                joint_angle_shape=joint_angle_shape):
+def plan_motion(chain, init_state, init_pos, target_pos, dt=0.002, const_vel=0.10, tmax=20,
+                pos_diff_epsilon=0.0016, joint_angle_shape=joint_angle_shape):
     init_pos = convert_to_tensor(init_pos) 
     tar_pos = convert_to_tensor(target_pos).reshape(joint_angle_shape)
     # all following operations done in tensor
     cur_pos = init_pos.reshape(joint_angle_shape)
-    cur_state = torch.clamp(init_state, joint_min, joint_max).reshape(joint_angle_shape)
+    cur_state = torch.clamp(init_state.reshape(joint_angle_shape), joint_min, joint_max).reshape(joint_angle_shape)
     keep_move = True
     jangs_vel_list = list()
     jangs_pos_list = list()
 
     # start planning
-    
-    while (keep_move):
-        #
-        #Add some check here to terminate
-
+    iterations = round(tmax/dt)
+    for i in range(iterations):
         dist = torch.norm(tar_pos - cur_pos)
-        t = dist/const_vel
-        ee_vel = ee_velocity(cur_pos, tar_pos, t)
+        if dist < pos_diff_epsilon:
+            print(f"term iters = {i}")
+            break
+        ee_vel = (tar_pos - cur_pos) / dist * const_vel
         
         J = chain.jacobian(cur_state.reshape(joint_angle_shape[0]))
         J = J.squeeze(0)
@@ -99,31 +96,23 @@ def plan_motion(chain, init_state, init_pos, target_pos, dt=0.002, const_vel = 0
         cur_state = jangs_vel.reshape(joint_angle_shape) * dt + cur_state
         cur_state = torch.clamp(cur_state, joint_min, joint_max)
         jangs_pos_list.append(cur_state)
-        cur_pos = torch.matmul(J, jangs_vel) + cur_pos
-        
+        cur_pos = torch.matmul(J, jangs_vel) * dt + cur_pos
     return jangs_vel_list, jangs_pos_list
 
 if __name__ ==  "__main__":
     # Sample joint angles (ensure this tensor is on the same device and dtype as your limits)
-    const_vel = 0.10
-    cur_angles = torch.tensor([-math.pi / 2.0, 100, math.pi, 0.0, math.pi / 2.0, 0.0]).reshape(joint_angle_shape)
+    init_state = torch.tensor([-0.001, 0.006, -0.031, -0.079, -0.002, 0.001])
+    # from unitree as unitree format
+    init_pos = torch.tensor([0.0, -0.0755, 0.0, 0.0864, 0.0, 0.1778])
+    target_pos = torch.tensor([0.0, 0.20, 0.0, 0.48, 0.0, 0.20])
+    # convert format
+    init_pos = torch.cat((init_pos[-3:], init_pos[:3]))
+    target_pos = torch.cat((target_pos[-3:], target_pos[:3]))
 
-    # Clamp joint angles to respect joint limits
+    link_name = "gripperStator"
+    chain = load_chain_from_urdf("z1_description/z1_gripper.urdf", link_name)
     
-    cur_angles_c = torch.clamp(cur_angles, joint_min, joint_max)
-    print(cur_angles_c)
 
-
-
-    link_name = "link06"
-    chain = load_chain_from_urdf(z1_description.URDF_PATH, link_name)
-    #chain = pk.build_serial_chain_from_urdf(open(z1_description.URDF_PATH).read(), link_name)
-
-    # Use the clamped joint angles for kinematics computations
-    print("here")
-    J = chain.jacobian(cur_angles_c.reshape(joint_angle_shape[0]))
-    J = J.squeeze(0)
-
-    print(J.shape)
-    J_inv = torch.pinverse(J)
-    print(J_inv.shape)
+    jangs_vel_list, jangs_pos_list = plan_motion(chain, init_state, init_pos, target_pos, 
+                                                 const_vel=0.10)
+    print(jangs_pos_list[-1])
