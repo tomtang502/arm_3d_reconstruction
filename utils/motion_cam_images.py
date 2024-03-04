@@ -8,10 +8,12 @@ print("Press ctrl+\ to quit process.")
 
 back_gripper_clocs = [
     [0.866679, 0.226716, -2.174512, 1.220503, -0.319004, 2.738409],
-    [-3.00884, -0.59141, -0.63270, -0.11136,  0.26341,  0.48496],
+    [-1.011894, 0.164913, -1.998049, 1.191000, 0.312839, -2.792527],
     [0.13717, 0.43749, 0.32348, 0.05619, -0.14178, 0.22141],
     [0.07096, 0.52266, 0.05814, -0.04354, -0.06640, 0.33880]
 ]
+
+start_loc = [-0.001, 0.006, -0.031, -0.079, -0.002, 0.001]
 """
 -0.06296  0.28114 -0.10987  0.03558  0.02220  0.19199
 -0.03597  0.53740 -0.22307  0.01029  0.08084  0.33757
@@ -30,12 +32,12 @@ arm.setFsmLowcmd()
 
 
 to_jangs(arm, arm_model, back_gripper_clocs[0])
-
-# for pt in back_gripper_clocs:
-#     gripper_pos = 0.0
-#     print(pt)
-#     arm.labelRun("top_cam_rb")
 arm.loopOn()
 arm.backToStart()
 arm.loopOff()
 
+to_jangs(arm, arm_model, back_gripper_clocs[1])
+
+arm.loopOn()
+arm.backToStart()
+arm.loopOff()

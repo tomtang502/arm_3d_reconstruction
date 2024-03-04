@@ -65,7 +65,7 @@ def to_jangs(arm, arm_model, jangs):
 
     duration = 1000
     lastPos = arm.lowstate.getQ()
-    targetPos = np.array(jangs) #forward
+    targetPos = np.array(jangs)
 
     for i in range(0, duration):
         arm.q = lastPos*(1-i/duration) + targetPos*(i/duration)# set position
@@ -78,9 +78,7 @@ def to_jangs(arm, arm_model, jangs):
         arm.sendRecv()# udp connection
         # print(arm.lowstate.getQ())
         time.sleep(arm._ctrlComp.dt)
-    arm.loopOn()
-    arm.backToStart()
-    arm.loopOff()
+    
 
 
 """
