@@ -49,7 +49,7 @@ chain = load_chain_from_urdf(config.urdf_loc, link_name)
 arm = unitree_arm_interface.ArmInterface(hasGripper=True)
 armModel = arm._ctrlComp.armModel
 jangs_vel_list, jangs_pos_list, _ = plan_motion(chain, init_state, init_pos, target_pos, dt = 1./240., 
-                                             pos_diff_epsilon=0.0018, const_vel=0.10, 
+                                             pos_diff_epsilon=0.0018, const_vel=0.20, 
                                              to_numpy=False, arm_Jacobian=armModel.CalcJacobian,
                                              forward_kin=armModel.forwardKinematics)
 base_vel = torch.tensor([0.0]).double()

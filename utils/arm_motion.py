@@ -3,11 +3,7 @@ import torch
 sys.path.append("../z1_sdk/lib")
 import unitree_arm_interface
 import numpy as np
-from arm_motion_planning import plan_motion, joint_to_pose
-project_relative_path = "../"
-sys.path.append(project_relative_path)
-from teaching_config import *
-config = TeachingConfig(project_relative_path)
+from arm_motion_planning import plan_motion, joint_to_pose, pose_shape
 
 """
 ---------------------------------------------------
@@ -33,12 +29,13 @@ Mat6 CalcJacobian(Vec6 q);
 """
 
 # move from one point to another point
-def move_2p(p_i, p_f, arm, arm_model, const_vel=0.10):
+def move_2p(p_f, arm, arm_model, const_vel=0.10):
 
     init_state = torch.tensor(arm.lowstate.getQ()).double()
     
     #from unitree as unitree format (row, pitch, yaw, x, y, z)
-    init_pos = torch.tensor(p_i).double()
+    p_i = joint_to_pose(init_state, arm_model.forwardKinematics)
+    init_pos = torch.tensor(p_i.reshape((pose_shape[0],))).double()
     target_pos = torch.tensor(p_f).double()
 
     _, jangs_pos_list, _ = plan_motion(None, init_state, init_pos, target_pos, const_vel=const_vel, 
@@ -78,9 +75,11 @@ if __name__ ==  "__main__":
     arm_model = arm._ctrlComp.armModel
     arm.setFsmLowcmd()
 
-    init_pos = [0.0, -0.0755, 0.0, 0.0864, 0.0, 0.1778]
     target_pos = [0.0, 0.20, -0.20, 0.48, 0.3, 0.40]
-    move_2p(init_pos, target_pos, arm, arm_model, const_vel=0.10)
+    move_2p(target_pos, arm, arm_model, const_vel=0.10)
+
+    target_pos = [0.0, 0.20, 0.0, 0.48, 0.0, 0.20]
+    move_2p(target_pos, arm, arm_model, const_vel=0.10)
 
     #input("Press the Enter key to continue: ") 
     arm.loopOn()
