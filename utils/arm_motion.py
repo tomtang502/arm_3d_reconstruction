@@ -60,6 +60,28 @@ def move_2p(p_f, arm, arm_model, const_vel=0.10):
         # print(arm.lowstate.getQ())
         time.sleep(arm._ctrlComp.dt)
 
+def to_jangs(arm, arm_model, jangs):
+    arm.setFsmLowcmd()
+
+    duration = 1000
+    lastPos = arm.lowstate.getQ()
+    targetPos = np.array(jangs) #forward
+
+    for i in range(0, duration):
+        arm.q = lastPos*(1-i/duration) + targetPos*(i/duration)# set position
+        arm.qd = (targetPos-lastPos)/(duration*0.002) # set velocity
+        arm.tau = arm_model.inverseDynamics(arm.q, arm.qd, np.zeros(6), np.zeros(6)) # set torque
+        arm.gripperQ = -1*(i/duration)
+
+        arm.setArmCmd(arm.q, arm.qd, arm.tau)
+        arm.setGripperCmd(arm.gripperQ, arm.gripperQd, arm.gripperTau)
+        arm.sendRecv()# udp connection
+        # print(arm.lowstate.getQ())
+        time.sleep(arm._ctrlComp.dt)
+    arm.loopOn()
+    arm.backToStart()
+    arm.loopOff()
+
 
 """
 The following code is for testing this single module, 
@@ -76,10 +98,11 @@ if __name__ ==  "__main__":
     arm.setFsmLowcmd()
 
     target_pos = [0.0, 0.20, -0.20, 0.48, 0.3, 0.40]
-    move_2p(target_pos, arm, arm_model, const_vel=0.10)
+    target_pos = [3.00804, -0.66806,  0.44886, -0.16574, -0.26793,  0.50651]
+    move_2p(target_pos, arm, arm_model, const_vel=0.20)
 
     target_pos = [0.0, 0.20, 0.0, 0.48, 0.0, 0.20]
-    move_2p(target_pos, arm, arm_model, const_vel=0.10)
+    move_2p(target_pos, arm, arm_model, const_vel=0.20)
 
     #input("Press the Enter key to continue: ") 
     arm.loopOn()

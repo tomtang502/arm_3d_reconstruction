@@ -11,7 +11,7 @@ while True:
 
     # If the frames were successfully captured
     if ret1 :
-        print(frame1.shape)
+        #print(frame1.shape)
         cv2.imshow('Camera 1', frame1)
 
         # Break the loop on pressing 'q'
@@ -22,7 +22,7 @@ while True:
         elif keyval == ord(' '):  # 32 is the ASCII code for the space bar
         # Save the frame as an image file
             print("start image save")
-            cv2.imwrite('calib_arm_cam/calib_arm'+str(idx)+'.jpg', frame1)
+            cv2.imwrite('../arm_images/init_arm_t'+str(idx)+'.jpg', frame1)
             print("image saved!")
             idx = idx+1
 
