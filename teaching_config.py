@@ -10,3 +10,10 @@ class TeachingConfig():
             self.urdf_loc = rel_path + "/utils/z1_description/z1_gripper.urdf"
         # joint_min, joint_max, joint_angle_shape can be changed in motion_planning.py
         self.const_vel = 0.10 # m/s
+        
+        """
+        Absolute initial position of the gripper loading plane (the J6 end plane): 
+            [0,049, 0, 0.1605]
+        The position of the center of the Unitree_gripper relative to the loading plane: 
+            [0.0382, 0, 0].
+        """
