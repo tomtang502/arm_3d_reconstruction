@@ -60,10 +60,8 @@ def move_2p(p_f, arm, arm_model, const_vel=0.10):
         # print(arm.lowstate.getQ())
         time.sleep(arm._ctrlComp.dt)
 
-def to_jangs(arm, arm_model, jangs):
+def to_jangs(arm, arm_model, jangs, gripperQ=-1.0, duration=1000):
     arm.setFsmLowcmd()
-
-    duration = 1000
     lastPos = arm.lowstate.getQ()
     targetPos = np.array(jangs)
 
@@ -71,15 +69,49 @@ def to_jangs(arm, arm_model, jangs):
         arm.q = lastPos*(1-i/duration) + targetPos*(i/duration)# set position
         arm.qd = (targetPos-lastPos)/(duration*0.002) # set velocity
         arm.tau = arm_model.inverseDynamics(arm.q, arm.qd, np.zeros(6), np.zeros(6)) # set torque
-        arm.gripperQ = -1*(i/duration)
+        arm.gripperQ = gripperQ*(i/duration)
 
         arm.setArmCmd(arm.q, arm.qd, arm.tau)
         arm.setGripperCmd(arm.gripperQ, arm.gripperQd, arm.gripperTau)
         arm.sendRecv()# udp connection
         # print(arm.lowstate.getQ())
         time.sleep(arm._ctrlComp.dt)
-    
 
+def pause_and_calm(arm, arm_model, duration=1000, gripperQ=0.):
+    lastPos = arm.lowstate.getQ()
+    zero_vel = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    zero_tau = np.array([[0., 0., 0., 0., 0., 0.]])
+
+    for i in range(0, duration):
+        arm.q = lastPos # stay at same position
+        arm.qd = zero_vel # set velocity
+        arm.tau = arm_model.inverseDynamics(arm.q, arm.qd, np.zeros(6), np.zeros(6)) # set torque
+        arm.gripperQ = gripperQ
+        
+        arm.setArmCmd(arm.q, arm.qd, arm.tau)
+        arm.setGripperCmd(arm.gripperQ, 0., arm.gripperTau)
+        arm.sendRecv()# udp connection
+        # print(arm.lowstate.getQ())
+        time.sleep(arm._ctrlComp.dt)
+
+def back_to_start(arm, duration=10):
+    arm.loopOn()
+    arm.backToStart()
+    arm.loopOff()
+    lastPos = arm.lowstate.getQ()
+    zero_vel = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    zero_tau = np.array([0., 0., 0., 0., 0., 0.])
+    for i in range(0, duration):
+        arm.q = lastPos # stay at same position
+        arm.qd = zero_vel # set velocity
+        arm.tau = zero_tau # set torque
+        arm.gripperQ = 0.0
+
+        arm.setArmCmd(arm.q, arm.qd, arm.tau)
+        arm.setGripperCmd(arm.gripperQ, arm.gripperQd, arm.gripperTau)
+        arm.sendRecv()# udp connection
+        # print(arm.lowstate.getQ())
+        time.sleep(arm._ctrlComp.dt)
 
 """
 The following code is for testing this single module, 

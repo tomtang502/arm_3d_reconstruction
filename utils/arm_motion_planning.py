@@ -3,8 +3,6 @@ import numpy as np
 import pytorch_kinematics as pk
 from scipy.spatial.transform import Rotation as R
 import math, sys, os
-sys.path.append("../z1_sdk/lib")
-import unitree_arm_interface
 
 
 
@@ -139,7 +137,8 @@ The following code is for testing this single module,
 and can serve as a template for function usage.  
 """
 if __name__ ==  "__main__":
-    
+    sys.path.append("../z1_sdk/lib")
+    import unitree_arm_interface
     # Sample joint angles (ensure this tensor is on the same device and dtype as your limits)
     init_state = torch.tensor([-0.001, 0.006, -0.031, -0.079, -0.002, 0.001]).double()
     # from unitree as unitree format

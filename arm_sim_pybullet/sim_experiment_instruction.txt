@@ -1,0 +1,6 @@
+################################################################################
+                    Simulated Arm Experiment Using Pybullet
+################################################################################
+
+Each python file starts with e is a standalone individual experiment, simply run 
+it to carry out the simulated experiment.

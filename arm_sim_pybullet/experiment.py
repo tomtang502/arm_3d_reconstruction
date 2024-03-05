@@ -1,24 +1,24 @@
 import pybullet as p
-import pybullet_data
+import pybullet_data as pdata
 import time, sys
 from sim_utils.print_format import *
-
-project_relative_path = "../"
-sys.path.append(project_relative_path)
-from utils.arm_motion_planning import *
-from teaching_config import *
 sys.path.append("../z1_sdk/lib")
 import unitree_arm_interface
+
 
 
 config = TeachingConfig(project_relative_path)
 
 physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
 print(p.getConnectionInfo())
-p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
+p.setAdditionalSearchPath(pdata.getDataPath()) #optionally
 p.setGravity(0,0,-9.8)
 dt = 1./240.
 p.setTimeStep(dt)
+
+"""
+Setting up onjects
+"""
 planeId = p.loadURDF("plane.urdf")
 startPos = [0,0,0]
 startOrientation = p.getQuaternionFromEuler([0,0,0])
