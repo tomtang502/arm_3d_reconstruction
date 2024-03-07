@@ -44,32 +44,32 @@ conti_move_idxs = [1, 2]
 
 # Open handles to the webcams
 
+def generate_images(end_effector_angles, tg_gripper_angs, experiment_name, save_format='jpg'):
+    np.set_printoptions(precision=3, suppress=True)
+    arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
+    # arm_model = arm._ctrlComp.armModel
+    armState = unitree_arm_interface.ArmFSMState
+    arm.loopOn()
+    arm.backToStart()
+    total_num_images = len(top_cam_cposes)
+    for i in range(total_num_images):
+        print(f"Start Taking {i + 1} out of {total_num_images}")
+        jnt_speed = 1.0
+        arm.MoveJ(np.array(top_cam_cposes[i]), tg_gripper_angs[i], jnt_speed)
+        cam = cv2.VideoCapture(2)
+        cam.set(cv2.CAP_PROP_AUTO_EXPOSURE, -4.25)  # Example value
+        success_captured, img = cam.read()
+        
+        if success_captured:
+            saved_name = f'{experiment_name}_{i}.{save_format}'
+            cv2.imwrite(f'../arm_captured_images/{saved_name}', img)
+            print(saved_name, "saved!")   
+        else:
+            print(f"unable to capture frame {i}")
+        cam.release()
+        if i not in conti_move_idxs:
+            arm.backToStart()
 
-np.set_printoptions(precision=3, suppress=True)
-arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
-# arm_model = arm._ctrlComp.armModel
-armState = unitree_arm_interface.ArmFSMState
-arm.loopOn()
-arm.backToStart()
-total_num_images = len(top_cam_cposes)
-for i in range(total_num_images):
-    print(f"Start Taking {i + 1} out of {total_num_images}")
-    jnt_speed = 1.0
-    arm.MoveJ(np.array(top_cam_cposes[i]), tg_gripper_angs[i], jnt_speed)
-    cam = cv2.VideoCapture(2)
-    cam.set(cv2.CAP_PROP_AUTO_EXPOSURE, -4.25)  # Example value
-    success_captured, img = cam.read()
-    
-    if success_captured:
-        saved_name = f'{experiment_name}_{i}.{save_format}'
-        cv2.imwrite(f'../arm_captured_images/{saved_name}', img)
-        print(saved_name, "saved!")   
-    else:
-        print(f"unable to capture frame {i}")
-    cam.release()
-    if i not in conti_move_idxs:
-        arm.backToStart()
+    arm.loopOff()
 
-arm.loopOff()
-
-cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
