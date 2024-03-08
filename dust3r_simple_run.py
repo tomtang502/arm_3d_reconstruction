@@ -51,16 +51,27 @@ def pose_to_transform(pose_batch):
     transform_matrices[:, 3, 3] = 1.0
     return transform_matrices
 
-def residual_error(R, A, B):
+def rotation_matrix_difference(R1, R2):
+    # Compute the difference between the two rotation matrices
+    diff = np.dot(R1.T, R2) - np.eye(3)
+
+    # Calculate the Frobenius norm of the difference
+    frobenius_norm = np.linalg.norm(diff, 'fro')
+
+    return frobenius_norm
+
+def residual_error(R, A, B, Z):
     """
     Compute the residual error for the rotation matrix R.
     
     Parameters:
-    R : torch.Tensor
+    R (base to world): torch.Tensor
         The estimated rotation matrix of shape (3, 3).
-    A, B : torch.Tensor
+    A (world to cam), B (base to gripper): torch.Tensor
         3D rotation tensors of shape (N, 3, 3) representing sequences of 
         transformations A and B respectively.
+    Z (gripper to cam): torch.Tensor 3D rotation tensors of shape (N, 3, 3) 
+        representing sequences of rotation respectively.
     
     Returns:
     error : float
@@ -69,10 +80,12 @@ def residual_error(R, A, B):
     N = A.shape[0]
     errors = []
     for i in range(N):
-        RA = R.mm(A[i])
-        BR = B[i].mm(R)
-        error = (RA - BR).norm()
-        errors.append(error.item())
+        AR = np.matmul(A[i], R)
+        ZB = np.matmul(Z, B[i])
+        print(AR, ZB)
+        error = rotation_matrix_difference(AR, ZB)
+        print(error)
+        errors.append(error)
     return sum(errors) / N
 
 device="cuda"
@@ -160,13 +173,29 @@ eef_mats=pose_to_transform(eef_poses_6d)
 poses_scaled=poses.clone()
 poses_scaled[:,:3,3]=poses_scaled[:,:3,3]*scale_factor
 # world-space coordinates to camera pose
-poses_scaled_np=np.array(torch.linalg.pinv(poses_scaled).cpu().detach())
+poses_scaled_np=np.array(poses_scaled.cpu().detach())
 # robot base to manipulator end-effector pose
-eef_mats_np=np.array(torch.linalg.pinv(eef_mats).cpu().detach())
+eef_mats_np=np.array(eef_mats.cpu().detach())
+R_base2world, t_base2world, R_gripper2cam, t_gripper2cam =cv2.calibrateRobotWorldHandEye(poses_scaled_np[:,:3,:3], 
+                                                                                         poses_scaled_np[:,:3,3],
+                                                                                         eef_mats_np[:,:3,:3],
+                                                                                         eef_mats_np[:,:3,3])
 
-rot,tr=cv2.calibrateHandEye(eef_mats_np[:,:3,:3],eef_mats_np[:,:3,3],
-        poses_scaled_np[:,:3,:3],poses_scaled_np[:,:3,3],method=cv2.CALIB_HAND_EYE_DANIILIDIS)
-
-print("here", rot, tr)
-print(residual_error(torch.tensor(rot).float(), torch.tensor(eef_mats_np[:,:3,:3]).float(),
-      torch.tensor(poses_scaled_np[:,:3,:3]).float()))
+print("here", R_base2world, t_base2world)
+"""
+    Compute the residual error for the rotation matrix R.
+    
+    Parameters:
+    R (base to world): torch.Tensor
+        The estimated rotation matrix of shape (3, 3).
+    A (world to cam), B (base to gripper): torch.Tensor
+        3D rotation tensors of shape (N, 3, 3) representing sequences of 
+        transformations A and B respectively.
+    Z (gripper to cam): torch.Tensor 3D rotation tensors of shape (N, 3, 3) 
+        representing sequences of rotation respectively.
+    
+    Returns:
+    error : float
+        The average residual error.
+    """
+print(residual_error(R_base2world, poses_scaled_np[:,:3,:3], eef_mats_np[:,:3,:3], R_gripper2cam))
