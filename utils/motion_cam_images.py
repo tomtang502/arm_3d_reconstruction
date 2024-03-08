@@ -7,7 +7,7 @@ import numpy as np
 # Open handles to the webcams
 
 def generate_images(end_effector_angles, tg_gripper_angs, experiment_name, conti_move_idxs, 
-                    save_format, saving_dir):
+                    save_format, saving_dir, cam_idx=2):
     assert len(end_effector_angles) == len(tg_gripper_angs)
     print("Press ctrl+\ to quit process.")
     np.set_printoptions(precision=3, suppress=True)
@@ -21,7 +21,7 @@ def generate_images(end_effector_angles, tg_gripper_angs, experiment_name, conti
         print(f"Start Taking {i + 1} out of {total_num_images}")
         jnt_speed = 1.0
         arm.MoveJ(np.array(end_effector_angles[i]), tg_gripper_angs[i], jnt_speed)
-        cam = cv2.VideoCapture(2)
+        cam = cv2.VideoCapture(cam_idx)
         cam.set(cv2.CAP_PROP_AUTO_EXPOSURE, -4.25)  # Example value
         success_captured, img = cam.read()
         
