@@ -60,7 +60,22 @@ def rotation_matrix_difference(R1, R2):
 
     return frobenius_norm
 
-def residual_error(R, A, B, Z):
+def euler_angle_error(euler_angles1, euler_angles2):
+    # Ensure both inputs are numpy arrays
+    euler_angles1 = np.array(euler_angles1)
+    euler_angles2 = np.array(euler_angles2)
+
+    # Compute the absolute difference for each angle component
+    absolute_difference = np.abs(euler_angles1 - euler_angles2)
+
+    # Calculate the Euclidean norm of the absolute difference
+    error_norm = np.linalg.norm(absolute_difference)
+
+    return error_norm
+
+    return absolute_difference
+
+def residual_error(T_R, A, B, Z):
     """
     Compute the residual error for the rotation matrix R.
     
@@ -80,11 +95,17 @@ def residual_error(R, A, B, Z):
     N = A.shape[0]
     errors = []
     for i in range(N):
-        AR = np.matmul(A[i], R)
+        AR = np.matmul(A[i], T_R)
         ZB = np.matmul(Z, B[i])
-        print(AR, ZB)
-        error = rotation_matrix_difference(AR, ZB)
-        print(error)
+        
+        r1 = R.from_matrix(AR)
+        r2 = R.from_matrix(ZB)
+
+        # Convert the rotation to Euler angles (in radians)
+        euler_angles_1 = r1.as_euler('xyz', degrees=False)
+        euler_angles_2 = r2.as_euler('xyz', degrees=False)
+        error = euler_angle_error(euler_angles_1, euler_angles_2)
+        #print(error)
         errors.append(error)
     return sum(errors) / N
 
@@ -97,7 +118,7 @@ images = load_images(file_paths, size=512)
 
 schedule = 'cosine'
 lr = 0.01 # 0.01
-niter = 320
+niter = 1020
 batch_size = 4
 
 pairs = make_pairs(images, scene_graph='complete', prefilter=None, symmetrize=True)
@@ -181,7 +202,7 @@ R_base2world, t_base2world, R_gripper2cam, t_gripper2cam =cv2.calibrateRobotWorl
                                                                                          eef_mats_np[:,:3,:3],
                                                                                          eef_mats_np[:,:3,3])
 
-print("here", R_base2world, t_base2world)
+#print("here", R_base2world, t_base2world)
 """
     Compute the residual error for the rotation matrix R.
     
