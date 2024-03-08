@@ -31,6 +31,7 @@ class ExperimentConfigs():
         self.fourback3sym_twosidesym_leftback3linearx()
         self.fourback3sym_twosidesym_leftback3linearx_sa()
         self.fourback3sym_threesidesym_leftback3linearx_sa()
+        self.twobacksym_twosidesym_leftback3linearx_sa()
     
     def get_config(self, name):
         if name in self.exps:
@@ -80,7 +81,7 @@ class ExperimentConfigs():
                             gripper_angs=tg_gripper_angs, conti_move_idxs=conti_move_idxs)
     
     def twoback_twosidesym_leftback3linearx(self):
-        experiment_name = "2back_2sidesym_leftback3linearx"
+        experiment_name = "2back_1sidesym_leftback3linearx"
         # roll pitch yaw x y z in meter
         top_cam_cposes = [
             [3.008, -0.668, 0.549, -0.16574, -0.268, 0.5065], # right back
@@ -243,13 +244,33 @@ class ExperimentConfigs():
             [-1.8205, 0.179, -0.2795, 0.256, -0.5694, 0.157], # right side 0
             [-1.721, 0.179, -0.2195, 0.326, -0.5645, 0.1535], # right side 1
             [-2.28403, 0.05687, -0.21994, 0.40305, -0.46293, 0.37193] # right side 2
-            
-            
-            
         ]
         # Gripper angle in radians
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
         conti_move_idxs = [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 13, 14]
+
+        self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
+                            gripper_angs=tg_gripper_angs, conti_move_idxs=conti_move_idxs)
+        
+    def twobacksym_twosidesym_leftback3linearx_sa(self):
+        experiment_name = "2backsym_2sidesym_leftback3linearx_sa"
+        # roll pitch yaw x y z in meter
+        top_cam_cposes = [
+            [3.008, -0.668, 0.549, -0.16574, -0.268, 0.5065], # right back 0
+            [-2.51890, -0.54126, -0.08807, -0.00074, -0.49342, 0.42817], # right back corner
+            [-3.008, -0.5914, -0.633, -0.111, 0.2634, 0.485], # left back 1
+            [-3.008, -0.5914, -0.633, -0.061, 0.2634, 0.485], # left back 1 x + 5cm
+            [-3.008, -0.5914, -0.633, -0.011, 0.2634, 0.485], # left back 1 x + 10cm
+            [2.31092, -0.24056, 0.99504, -0.21117, 0.12188, 0.41125], # left back 2
+          
+            [1.8205, 0.179, 0.2795, 0.256, 0.5694, 0.157], # left side 1
+            [2.28403, 0.05687, 0.21994, 0.40305, 0.46293, 0.37193], # left side 2
+            [-1.8205, 0.179, -0.2795, 0.256, -0.5694, 0.157], # right side 0
+            [-2.28403, 0.05687, -0.21994, 0.40305, -0.46293, 0.37193] # right side 2   
+        ]
+        # Gripper angle in radians
+        tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
+        conti_move_idxs = [0, 2, 3, 4, 6, 8]
 
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, conti_move_idxs=conti_move_idxs)
