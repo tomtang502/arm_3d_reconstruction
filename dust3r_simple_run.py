@@ -10,6 +10,7 @@ from dust3r.viz import add_scene_cam, CAM_COLORS, OPENGL, pts3d_to_trimesh, cat_
 from dust3r.cloud_opt import global_aligner, GlobalAlignerMode
 
 from utils.graph_util import graph_single_struct, graph_double_struct
+from observation_poses_config import ExperimentConfigs
 from dust3r.utils.geometry import find_reciprocal_matches, xy_grid
 from trace_viz import *
 
@@ -42,7 +43,7 @@ if not using_saved:
     device="cuda"
     model_path = "dust3r/checkpoints/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth"
     model = load_model(model_path, device)
-    folder_path = 'arm_captured_images/2bs2sslb3_sa'
+    folder_path = 'arm_captured_images/xyz2each_10imgs_sa'
     file_paths = get_file_paths(folder_path)#[:4]
     images = load_images(file_paths, size=512)
 
@@ -93,19 +94,19 @@ def extract_positions_directions(transform_matrices):
 positions, directions = extract_positions_directions(poses)
 
 scale_factor=(0.05)/(0.5*(torch.norm(positions[4]-positions[3])+torch.norm(positions[3]-positions[2])))
-eef_poses = [
-    [3.008, -0.668, 0.549, -0.16574, -0.268, 0.5065], # right back 0
-    [-2.51890, -0.54126, -0.08807, -0.00074, -0.49342, 0.42817], # right back corner
-    [-3.008, -0.5914, -0.633, -0.111, 0.2634, 0.485], # left back 1
-    [-3.008, -0.5914, -0.633, -0.061, 0.2634, 0.485], # left back 1 x + 5cm
-    [-3.008, -0.5914, -0.633, -0.011, 0.2634, 0.485], # left back 1 x + 10cm
-    [2.31092, -0.24056, 0.99504, -0.21117, 0.12188, 0.41125], # left back 2
+# eef_poses = [
+#     [3.008, -0.668, 0.549, -0.16574, -0.268, 0.5065], # right back 0
+#     [-2.51890, -0.54126, -0.08807, -0.00074, -0.49342, 0.42817], # right back corner
+#     [-3.008, -0.5914, -0.633, -0.111, 0.2634, 0.485], # left back 1
+#     [-3.008, -0.5914, -0.633, -0.061, 0.2634, 0.485], # left back 1 x + 5cm
+#     [-3.008, -0.5914, -0.633, -0.011, 0.2634, 0.485], # left back 1 x + 10cm
+#     [2.31092, -0.24056, 0.99504, -0.21117, 0.12188, 0.41125], # left back 2
     
-    [1.8205, 0.179, 0.2795, 0.256, 0.5694, 0.157], # left side 1
-    [2.28403, 0.05687, 0.21994, 0.40305, 0.46293, 0.37193], # left side 2
-    [-1.8205, 0.179, -0.2795, 0.256, -0.5694, 0.157], # right side 0
-    [-2.28403, 0.05687, -0.21994, 0.40305, -0.46293, 0.37193] # right side 2
-]
+#     [1.8205, 0.179, 0.2795, 0.256, 0.5694, 0.157], # left side 1
+#     [2.28403, 0.05687, 0.21994, 0.40305, 0.46293, 0.37193], # left side 2
+#     [-1.8205, 0.179, -0.2795, 0.256, -0.5694, 0.157], # right side 0
+#     [-2.28403, 0.05687, -0.21994, 0.40305, -0.46293, 0.37193] # right side 2
+# ]
 # eef_poses = [
 #     [3.008, -0.668, 0.549, -0.16574, -0.268, 0.5065], # right back 0
 #     [3.008, -0.5914, 0.633, -0.111, -0.2634, 0.485], # right back 1
@@ -126,6 +127,12 @@ eef_poses = [
 #     [-2.28403, 0.05687, -0.21994, 0.40305, -0.46293, 0.37193] # right side 2
 # ]
 
+exp_config = ExperimentConfigs()
+
+experiment_tag = "xyz2linear_2backsym_3side_sa"
+pose_data = exp_config.get_config(experiment_tag)
+eef_poses = pose_data.poses 
+
 print(len(eef_poses), len(eef_poses[0]), poses.shape)
 eef_pos_np = np.array(eef_poses)[:, 3:]
 eef_poses_6d=torch.tensor(eef_poses)
@@ -141,7 +148,7 @@ poses_L = [p for p in poses]
 cam_xyz_L = np.stack(transform_list_of_matrices_to_xyz(poses_L))
 #cam_xyz_L = flip_axis(cam_xyz_L)
 print(cam_xyz_L)
-#graph_single_struct(cam_xyz_L)
+graph_single_struct(cam_xyz_L)
 #graph_single_struct(pts_tor)
 
 scale_factor = scale_factor.numpy()
@@ -244,13 +251,14 @@ pts_b = np.stack(pts_b)
 print("After transformed with skipping points:", pts_b.shape)
 
 # Transform camera
-positions_cam=world2cam[:,:3,3]
+positions_cam=poses[:,:3,3]
 cam_pts_b = []
 for p in positions_cam:
     #combined_transformation_matrix = np.matmul(np.linalg.pinv(T_Z), np.matmul(p, T_X))
     cam_pts_b.append(apply_transform_pt(p, np.linalg.pinv(T_X)))
 cam_pts_b = np.stack(cam_pts_b)
 print(cam_pts_b.shape)
+graph_single_struct(cam_pts_b)
 # cam_pts_b = flip_axis(np.stack(cam_pts_b))
 # print(cam_pts_b.shape)
 
@@ -293,7 +301,7 @@ transformation_matrix = align_point_cloud(pts_b_tor)
 
 homogeneous_point_cloud = torch.cat((pts_b_tor, torch.ones(pts_b.shape[0], 1)), dim=1)
 aligned_point_cloud = torch.matmul(transformation_matrix, homogeneous_point_cloud.T).T
-graph_single_struct(aligned_point_cloud)
+#graph_single_struct(aligned_point_cloud)
 #graph_double_struct(cam_pts_b, pts_b)
 
 # reassign variable name to align with Will's name format 
