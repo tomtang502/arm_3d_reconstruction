@@ -14,14 +14,16 @@ list of experiment tags and their saved image folder names (same means same name
 4back3sym_2sidesym_leftback3linearx_sa : 4bs2sslb3_sa (12+2 images), 4bs2sslb3_sa_apriltag
 4back3sym_3sidesym_leftback3linearx_sa : 4bs3sslb3_sa (14+2 images), 4bs3sslb3_sa_apriltag
 2backsym_2sidesym_leftback3linearx_sa : 2bs2sslb3_sa (8+2 images for GPU), 2bs2sslb3_sa_apriltag
+"xyz2linear_2backsym_3side_sa" : xyz2each_10imgs_sa, xyz2each_10imgs_sa_apriltag
+"xyz3linear_5back_2sidesym_sa" : xyz3each_16imgs_sa, xyz3each_16imgs_sa_apriltag
 
 """
-experiment_tag = "2backsym_2sidesym_leftback3linearx_sa"
+experiment_tag = "xyz3linear_5back_2sidesym_sa"
 pose_data = exp_config.get_config(experiment_tag)
 
 
 # Running the arm to get pictures in assigned poses
-images_saving_name = "2bs2sslb3_sa_apriltag"
+images_saving_name = "xyz3each_16imgs_sa"
 saving_dir = f"arm_captured_images/{images_saving_name}"
 if not os.path.exists(saving_dir):
     os.makedirs(saving_dir)

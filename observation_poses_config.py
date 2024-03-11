@@ -32,6 +32,8 @@ class ExperimentConfigs():
         self.fourback3sym_twosidesym_leftback3linearx_sa()
         self.fourback3sym_threesidesym_leftback3linearx_sa()
         self.twobacksym_twosidesym_leftback3linearx_sa()
+        self.xyz2linear_twobacksym_threeside_sa()
+        self.xyz3linear_fiveback_twosidesym_sa()
     
     def get_config(self, name):
         if name in self.exps:
@@ -272,5 +274,59 @@ class ExperimentConfigs():
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
         conti_move_idxs = [0, 2, 3, 4, 6, 8]
 
+        self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
+                            gripper_angs=tg_gripper_angs, conti_move_idxs=conti_move_idxs)
+        
+    def xyz3linear_fiveback_twosidesym_sa(self):
+        experiment_name = "xyz3linear_5back_2sidesym_sa"
+        # roll pitch yaw x y z in meter
+        top_cam_cposes = [
+            [3.008, -0.668, 0.549, -0.16574, -0.268, 0.5065], # right back 0
+            [-2.51890, -0.54126, -0.08807, -0.00074, -0.49342, 0.42817], # right back corner
+            [-3.008, -0.5914, -0.633, -0.111, 0.2634, 0.485], # left back 1
+            [2.31092, -0.24056, 0.99504, -0.21117, 0.12188, 0.41125], # left back 2
+
+            [-2.98462, -0.59539, -0.63417, -0.02,  0.15,  0.55564], # new y-10cm
+            [-2.98462, -0.59539, -0.63417, -0.02,  0.20,  0.55564], # new y-5cm 
+            [-2.98462, -0.59539, -0.63417, -0.02,  0.25,  0.55564], # new
+            [-2.98462, -0.59539, -0.63417, 0.03,  0.25,  0.55564], # new x+5cm
+            [-2.98462, -0.59539, -0.63417, 0.08,  0.25, 0.55564], # new x+10cm
+            [-2.98462, -0.59539, -0.63417, -0.02,  0.25,  0.55564], # new
+            [-2.98462, -0.59539, -0.63417, -0.02,  0.25,  0.60564], # new z+5cm
+            [-2.98462, -0.59539, -0.63417, -0.02,  0.25,  0.50564], # new z-5cm
+            
+        
+            [1.8205, 0.179, 0.2795, 0.256, 0.5694, 0.157], # left side 1
+            [2.28403, 0.05687, 0.21994, 0.40305, 0.46293, 0.37193], # left side 2
+            [-1.8205, 0.179, -0.2795, 0.256, -0.5694, 0.157], # right side 0
+            [-2.28403, 0.05687, -0.21994, 0.40305, -0.46293, 0.37193] # right side 2   
+        ]
+        # Gripper angle in radians
+        tg_gripper_angs = [-np.pi/2 + 0.0001] * len(top_cam_cposes)
+        conti_move_idxs = [0] + [2, 3, 4, 5, 6, 7, 8, 9, 10] + [12, 14]
+        self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
+                            gripper_angs=tg_gripper_angs, conti_move_idxs=conti_move_idxs)
+
+    def xyz2linear_twobacksym_threeside_sa(self):
+        experiment_name = "xyz2linear_2backsym_3side_sa"
+        # roll pitch yaw x y z in meter
+        top_cam_cposes = [
+            [3.008, -0.668, 0.549, -0.16574, -0.268, 0.5065], # right back 0
+            [-2.51890, -0.54126, -0.08807, -0.00074, -0.49342, 0.42817], # right back corner
+            [2.31092, -0.24056, 0.99504, -0.21117, 0.12188, 0.41125], # left back 2
+
+            [-2.98462, -0.59539, -0.63417, -0.02,  0.15,  0.55564], # new y-10cm
+            [-2.98462, -0.59539, -0.63417, -0.02,  0.25,  0.55564], # new
+            [-2.98462, -0.59539, -0.63417, 0.08,  0.25, 0.55564], # new x+10cm
+            [-2.98462, -0.59539, -0.63417, -0.02,  0.25,  0.45564], # new z-10cm
+            
+        
+            [1.8205, 0.179, 0.2795, 0.256, 0.5694, 0.157], # left side 0
+            [-1.8205, 0.179, -0.2795, 0.256, -0.5694, 0.157], # right side 0
+            [-2.28403, 0.05687, -0.21994, 0.40305, -0.46293, 0.37193] # right side 1  
+        ]
+        # Gripper angle in radians
+        tg_gripper_angs = [-np.pi/2 + 0.0001] * len(top_cam_cposes)
+        conti_move_idxs = [0] + [2, 3, 4, 5] + [8]
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, conti_move_idxs=conti_move_idxs)
