@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import plotly.graph_objects as go
 import numpy as np
 
 def get_xyz_lim(xrange, yrange, zrange):
@@ -105,3 +106,53 @@ def graph_double_struct(xyz1_stack, xyz2_stack, line_connect=False):
     # ax.set_zlim(zrange_lim)
     # Show the plot
     plt.show()
+
+
+color_names = [
+    'red',
+    'blue',
+    'green',
+    'yellow',
+    'cyan',
+    'magenta',
+    'black',
+    'white',
+    'gray',
+    'brown',
+    'orange',
+    'pink',
+    'purple',
+    'lavender',
+    'maroon',
+    'navy',
+    'teal',
+    'turquoise',
+    'gold',
+    'silver'
+]
+
+"""
+[In] struct_list: a list of structure to graph (all with N*3 shape)
+[In] struct_names: a list of structure names corresponds to the previous input
+[In] dot_size_list: a list of float specify relative dot size between structures
+"""
+def plotty_graph_multistruct(struct_list, struct_names, dot_size_list):
+    fig = go.Figure()
+    color_num = len(color_names)
+    for i in range(len(struct_list)):
+        var = struct_list[i] 
+        fig.add_trace(go.Scatter3d(x=var[:, 0],  # X coordinates
+            y=var[:, 1],  # Y coordinates
+            z=var[:, 2],  # Z coordinates
+            mode='markers', marker=dict(size=dot_size_list[i], color=color_names[i%len(color_names)]),
+            name=struct_names[i]))
+
+    title = ''
+    for struct_name in struct_names:
+        title += struct_name + " + "
+    title = title[:-3]
+    fig.update_layout(scene=dict(xaxis_title='X', yaxis_title='Y', zaxis_title='Z'),
+                    title=title)
+
+    fig.update_layout(width=1000, height=700)
+    fig.show()
