@@ -62,7 +62,8 @@ class ArmDustrExpData():
     # If image_type=0 then they are sorted so their order is corresponded to the angles 
     # configuration order in configs/observation_poses_config.py.
     def get_images_paths(self, exp_name, for_colmap=False):
-        file_paths = get_file_paths(os.path.join(self.train_imgs_folder_pth, exp_name))
+        file_paths = get_file_paths(os.path.join(self.imgs_folder_pth, exp_name))
+        print(file_paths)
         if not for_colmap:
             file_paths = [f for f in file_paths if 'cm' not in f] 
         return file_paths
@@ -84,10 +85,13 @@ class ArmDustrExpData():
 def get_file_paths(folder_path):
     file_paths = []  # List to store file paths
     # Walk through all files and directories in the specified folder
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            file_path = os.path.join(root, file)  # Create full file path
-            file_paths.append(file_path)  # Add file path to list
+    all_files_and_dirs = os.listdir(folder_path)
+    
+    # Filter out directories, keeping only files
+    for f in all_files_and_dirs:
+        path = os.path.join(folder_path, f)
+        if os.path.isfile(path):
+            file_paths.append(path)
     # Sort the list based on filenames
     file_paths.sort()
     return file_paths

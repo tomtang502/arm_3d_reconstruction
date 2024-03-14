@@ -90,7 +90,7 @@ def extract_positions(transform_matrices):
 
 if __name__ == "__main__":
     # This is for submodule test and can be treated as a sample usage
-    exp_name = '2bs2sslb3_sa'
+    exp_name = '8obj_divangs'
     output_pose_pth, output_pc_pth = running_dust3r(exp_name)
     poses, pts_tor = load_pose_ptc(output_pose_pth, output_pc_pth)
     print(output_pose_pth, output_pc_pth)
