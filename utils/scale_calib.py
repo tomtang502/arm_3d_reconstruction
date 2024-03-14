@@ -75,13 +75,13 @@ def get_scale_factor(cam_poses, linear_idx_x, x_d):
     scale_factor = x_d/(sum_dist/float(n-1))
     return scale_factor
 
+# This assume input selected by linear_idx_x is on a line
 def get_scale_factor_col(cam_poses_map, linear_idx_x, x_d):
     sum_dist = 0
     n = len(linear_idx_x)
     for i in range(n - 1):
         idx1 = linear_idx_x[i]
         idx2 = linear_idx_x[i+1]
-        print(cam_poses_map[idx1], cam_poses_map[idx2])
         pt2pt_trans = np.matmul(torch.linalg.pinv(cam_poses_map[idx1]), cam_poses_map[idx2])
         vec = apply_transform_pt([0.0, 0.0, 0.0], pt2pt_trans)
         print(vec)

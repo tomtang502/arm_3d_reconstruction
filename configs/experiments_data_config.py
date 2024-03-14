@@ -31,6 +31,10 @@ class ArmDustrExpData():
             '8obj_divangs' : 'diverse_ori_sa',
             '8obj_4cluster': 'fourcluster_ori_sa', 
             '8obj_backonly': 'backonly_ori_sa', 
+
+            '7obj_divangs' : 'diverse_ori_sa',
+            '7obj_4cluster': 'fourcluster_ori_sa', 
+            '7obj_backonly': 'backonly_ori_sa', 
             
             # center of april tag about 0.15 m from base center
             'apriltag_divangs' : 'diverse_ori_sa',
@@ -73,11 +77,8 @@ class ArmDustrExpData():
         file_name = exp_name+self.ptc_file_suffix
         if exp_type == 0:
             return os.path.join(self.dustr_out_pth, file_name)
-        elif exp_type == 1:
-            # dir
-            return os.path.join(self.depth_out_pth, exp_name)
-        else:
-            return os.path.join(self.colmap_out_pth, file_name)
+        else: # dir
+            return os.path.join(self.colmap_out_pth, exp_name)
         
     def get_cam_pose_path(self, exp_name):
         return os.path.join(self.dustr_out_pth, exp_name+self.dust3r_cam_poses_file_suffix)

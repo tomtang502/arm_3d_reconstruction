@@ -153,3 +153,7 @@ def transform_points(points, matrix):
 
 def colmap_pose2transmat(col_pose_mat):
     return np.vstack((col_pose_mat, np.array([[0,0,0,1]])))
+
+
+def rearrange(eef_poses_tor, im_poses_tor_o, new_order):
+        return eef_poses_tor[new_order, :, :], im_poses_tor_o[new_order, :, :] 

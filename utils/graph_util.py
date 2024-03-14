@@ -77,13 +77,13 @@ def graph_double_struct(xyz1_stack, xyz2_stack, line_connect=False):
 
     ax.set_box_aspect([1,1,1])
     # Scatter plot
-    ax.scatter(x, y, z, c='r', marker='o', s=150)
+    ax.scatter(x, y, z, c='r', marker='o', s=50)
 
     x = xyz2_stack[:, 0]
     y = xyz2_stack[:, 1]
     z = xyz2_stack[:, 2]
     # Scatter plot
-    ax.scatter(x, y, z, c='b', marker='o', s=150)
+    ax.scatter(x, y, z, c='b', marker='o', s=5)
 
 
     if line_connect:
