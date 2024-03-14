@@ -24,17 +24,18 @@ class ArmDustrExpData():
             '2bs2sslb3_sa_apriltag': '2backsym_2sidesym_leftback3linearx_sa',
 
             # For comparison with colmap (14 + 2 images)
-            '8bbj_divangs' : 'diverse_ori_sa',
-            '8obj_4cluster': 'fourcluster_ori_sa', 
-            '8obj_backonly': 'backonly_ori_sa', 
-
-            '2bbj_divangs' : 'diverse_ori_sa',
+            '2obj_divangs' : 'diverse_ori_sa',
             '2obj_4cluster': 'fourcluster_ori_sa', 
             '2obj_backonly': 'backonly_ori_sa',
+
+            '8obj_divangs' : 'diverse_ori_sa',
+            '8obj_4cluster': 'fourcluster_ori_sa', 
+            '8obj_backonly': 'backonly_ori_sa', 
             
-            'divangs_apriltag' : 'diverse_ori_sa',
-            '4cluster_apriltag': 'fourcluster_ori_sa',
-            'backonly_apriltag': 'backonly_ori_sa',
+            # center of april tag about 0.15 m from base center
+            'apriltag_divangs' : 'diverse_ori_sa',
+            'apriltag_4cluster': 'fourcluster_ori_sa',
+            'apriltag_backonly': 'backonly_ori_sa',
             
         }
 

@@ -1,7 +1,7 @@
 import numpy as np
 class ObsAngsConfig():
-    def __init__(self, poses, grippper_angs, experiment_name, 
-                 linear_idx=dict(), conti_move_idxs=None, image_format='jpg'):
+    def __init__(self, poses, grippper_angs, experiment_name, linear_idx=dict(), 
+                 conti_move_idxs=None, image_format='jpg', test_pt=[]):
         self.poses = poses
         self.grippper_angs = grippper_angs
         self.name = experiment_name
@@ -22,7 +22,7 @@ class ObsAngsConfig():
             [-2.98462, -0.59539, -0.63417, -0.02,  0.25,  0.50564]# new z-5cm
         ]
         self.colmap_gripper_ang = grippper_angs[0]
-        
+        self.test_pt = test_pt        
 
 class ExperimentConfigs():
     def __init__(self, rel_path=""):
@@ -53,9 +53,10 @@ class ExperimentConfigs():
             raise Exception(f"The experiment with name {name} is not defined in observation_poses_config.py yet!")
 
     def add_experiment(self, experiment_name, poses, gripper_angs, linear_idx=dict(),
-                       conti_move_idxs=None, image_format='jpg'):
+                       conti_move_idxs=None, image_format='jpg', test_pt=[]):
         self.exps[experiment_name] = ObsAngsConfig(poses, gripper_angs, experiment_name, 
-                                                   linear_idx, conti_move_idxs, image_format)
+                                                   linear_idx, conti_move_idxs, image_format,
+                                                   test_pt)
 
     # ----------------- example of adding an experiment -----------------
     # Don't fogot to call this in your python file or in __init__!
@@ -77,7 +78,7 @@ class ExperimentConfigs():
             [-1.8205, 0.179, -0.2795, 0.256, -0.5694, 0.157], # left side 0
             [-1.721, 0.179, -0.2195, 0.326, -0.5645, 0.1535], # left side 1
             [1.721, 0.179, 0.2195, 0.326, 0.5645, 0.1535], # right side 0
-            [1.8205, 0.179, 0.2795, 0.256, 0.5694, 0.157] # right side 1
+            [1.8205, 0.179, 0.2795, 0.256, 0.5694, 0.157] # right side 1test_pt=test_pt
         ]
         # Gripper angle in radians
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
@@ -162,7 +163,7 @@ class ExperimentConfigs():
             [-1.8205, 0.179, -0.2795, 0.256, -0.5694, 0.157], # right side 0
             [-1.721, 0.179, -0.2195, 0.326, -0.5645, 0.1535], # right side 1
 
-            [2.87854, 0.62008, 0.39347, 0.15808, 0.43670, 0.48861], # left cside
+            [2.41919, -0.40692, 0.26378, 0.13205, 0.42530, 0.46276], # left cside
             [1.721, 0.179, 0.2195, 0.326, 0.5645, 0.1535], # left side 0
             [1.8205, 0.179, 0.2795, 0.256, 0.5694, 0.157] # left side 1
         ]
@@ -170,12 +171,13 @@ class ExperimentConfigs():
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
         conti_move_idxs = [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 13, 14]
         additional_linear_pts = [5, 6]
+        test_pt = [1, 4, 13, 14]
         linear_idx = dict()
         linear_idx['x'] = (additional_linear_pts+[7], additional_linear_pts,  0.05)
 
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
-                            conti_move_idxs=conti_move_idxs)
+                            conti_move_idxs=conti_move_idxs, test_pt=test_pt)
     
     def fourcluster_ori_sa(self):
         experiment_name = "fourcluster_ori_sa"
@@ -208,9 +210,10 @@ class ExperimentConfigs():
         # are points that is obtained from moving parallel on an axis from e7
         linear_idx['x'] = (additional_linear_pts+[7], additional_linear_pts,  0.05)
 
+        test_pt = [0, 4, 10, 15]
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
-                            conti_move_idxs=conti_move_idxs)
+                            conti_move_idxs=conti_move_idxs, test_pt=test_pt)
         
     def backonly_ori_sa(self):
         experiment_name = "backonly_ori_sa"
@@ -242,7 +245,7 @@ class ExperimentConfigs():
         # For one axis, element at idx 7 (e7) is the original point, and the additional_linear_pts 
         # are points that is obtained from moving parallel on an axis from e7
         linear_idx['x'] = (additional_linear_pts+[10], additional_linear_pts,  0.05)
-
+        test_pt = [0, 6, 7, 14]
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
-                            conti_move_idxs=conti_move_idxs)
+                            conti_move_idxs=conti_move_idxs, test_pt=test_pt)
