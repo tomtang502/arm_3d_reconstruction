@@ -1,19 +1,23 @@
 import os
 from utils.motion_cam_images import generate_images
-from configs.observation_poses_config import ExperimentConfigs
+from configs.experiments_data_config import ArmDustrExpData
 
+exp_config = ArmDustrExpData()
+exp_name = "8obj_backonly"
 
-exp_config = ExperimentConfigs()
-
-experiment_tag = "xyz3linear_5back_2sidesym_sa"
-pose_data = exp_config.get_config(experiment_tag)
-
+pose_data = exp_config.get_obs_config(exp_name)
+web_cam_idx = 2
 
 # Running the arm to get pictures in assigned poses
-images_saving_name = "xyz3each_16imgs_sa"
-saving_dir = f"arm_captured_images/{images_saving_name}"
+saving_dir = exp_config.get_images_dir(exp_name)
+print(f"Images files saved at {saving_dir}")
 if not os.path.exists(saving_dir):
     os.makedirs(saving_dir)
-generate_images(end_effector_angles=pose_data.poses, tg_gripper_angs=pose_data.grippper_angs, 
-                experiment_name=images_saving_name, conti_move_idxs=pose_data.conti_move_idxs,
-                save_format=pose_data.image_format, saving_dir=saving_dir, cam_idx=0)
+
+
+generate_images(end_effector_angles=pose_data.poses, 
+                colmapimg_angs=pose_data.additional_colmap_pose,
+                tg_gripper_angs=pose_data.grippper_angs,
+                comap_griang=pose_data.colmap_gripper_ang,
+                experiment_name=exp_name, conti_move_idxs=pose_data.conti_move_idxs,
+                save_format=pose_data.image_format, saving_dir=saving_dir, cam_idx=web_cam_idx)

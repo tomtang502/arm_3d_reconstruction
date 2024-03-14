@@ -6,7 +6,7 @@ import os
 from matplotlib import pyplot as plt
 
 # Connect to capture device
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 
 # Loop through every frame until we close our webcam
 while cap.isOpened(): 
@@ -23,3 +23,4 @@ while cap.isOpened():
 cap.release()
 # Closes the frame
 cv2.destroyAllWindows()
+

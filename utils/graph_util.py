@@ -56,10 +56,10 @@ def graph_single_struct(xyz_stack, line_connect=False, s=50):
     ax.set_zlabel('Z Label')
 
     # Set the limits for each axis
-    xrange_lim, yrange_lim, zrange_lim = (-1., 1.), (-1., 1.), (-1., 1.)
-    # xrange_lim, yrange_lim, zrange_lim = get_xyz_lim((np.min(x), np.max(x)), 
-    #                                                  (np.min(y), np.max(y)), 
-    #                                                  (np.min(z), np.max(z)))
+    
+    xrange_lim, yrange_lim, zrange_lim = get_xyz_lim((np.min(x), np.max(x)), 
+                                                     (np.min(y), np.max(y)), 
+                                                     (np.min(z), np.max(z)))
     ax.set_xlim(xrange_lim)
     ax.set_ylim(yrange_lim)
     ax.set_zlim(zrange_lim)
@@ -97,7 +97,6 @@ def graph_double_struct(xyz1_stack, xyz2_stack, line_connect=False):
     ax.set_zlabel('Z Label')
 
     # Set the limits for each axis
-    xrange_lim, yrange_lim, zrange_lim = (-1., 1.), (-1., 1.), (-1., 1.)
     # xrange_lim, yrange_lim, zrange_lim = get_xyz_lim((np.min(x), np.max(x)), 
     #                                                  (np.min(y), np.max(y)), 
     #                                                  (np.min(z), np.max(z)))

@@ -123,29 +123,6 @@ def tmatw2c_to_xyz(transformation_matrices):
     return coordinates_list
 
 """
-Compute the scale factor given the following
-[IN] cam_poses is an array of world to camera transformation marix.
-[IN] linear_idx_axis index into the w3c (cam_poses) to get corresponding transformation 
-    matrices that have cam poses moving parallel to the specified axis.
-[IN] axis_d is the distance between each consecutive two cam poses in real world.
-    (here the variable name use x becuase it is the pose example we have in cam_pose config)
-[OUT] Scale factor to scale the w2c transformation matrix.
-"""
-def get_scale_factor(cam_poses, linear_idx_x, x_d):
-
-    sum_dist = 0
-    n = len(linear_idx_x)
-    for i in range(n - 1):
-        idx1 = linear_idx_x[i]
-        idx2 = linear_idx_x[i+1]
-        pt2pt_trans = np.matmul(torch.linalg.pinv(cam_poses[idx1]), cam_poses[idx2])
-        vec = apply_transform_pt([0.0, 0.0, 0.0], pt2pt_trans)
-        #print(idx, cam_xyz_L[idx, cam_xyz_L[idx + 1,0])
-        sum_dist += np.linalg.norm(vec)
-    scale_factor = x_d/(sum_dist/float(n-1))
-    return scale_factor
-
-"""
 Applies a transformation to a set of 3D points.
 [IN] points: A torch tensor of size (n, 3) representing n 3D points.
 [IN] matrix: A torch tensor of size (4, 4) representing the transformation matrix.
@@ -172,3 +149,7 @@ def transform_points(points, matrix):
     transformed_points = transformed_points_homogeneous[:, :3]
     
     return transformed_points
+
+
+def colmap_pose2transmat(col_pose_mat):
+    return np.vstack((col_pose_mat, np.array([[0,0,0,1]])))
