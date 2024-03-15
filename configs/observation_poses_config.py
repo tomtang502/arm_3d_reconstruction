@@ -50,6 +50,9 @@ class ExperimentConfigs():
         self.diverse_ori_sa()
         self.fourcluster_ori_sa()
         self.backonly_ori_sa()
+        self.shelf_4cl_sa()
+        self.shelf_div_sa()
+
     
     def get_config(self, name):
         if name in self.exps:
@@ -254,3 +257,78 @@ class ExperimentConfigs():
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
                             conti_move_idxs=conti_move_idxs, test_pt=test_pt)
+
+    def shelf_4cl_sa(self):
+        experiment_name = "shelf_4cl_sa"
+        # roll pitch yaw x y z in meter
+        top_cam_cposes = [
+            [3.008, -0.668, 0.549, -0.16574, -0.268, 0.5065], # right back 0
+            [2.71862, -0.69969, 0.53677, 0.03473, -0.09294, 0.71095], # right back 1
+            [-2.23329, -0.26615, -1.04705, -0.19794, -0.12522, 0.42122], #right back 2
+            [-2.51890, -0.54126, -0.08807, -0.00074, -0.49342, 0.42817], # right back corner
+            [-3.008, -0.668, -0.549, -0.16574, 0.268, 0.5065], # left back 0
+            [-3.008, -0.5914, -0.633, -0.111, 0.2634, 0.485], # left back 1
+            [-3.008, -0.5914, -0.633, -0.061, 0.2634, 0.485], # left back 1 x + 5cm
+            [-3.008, -0.5914, -0.633, -0.011, 0.2634, 0.485], # left back 1 x + 10cm
+            [2.31092, -0.24056, 0.99504, -0.21117, 0.12188, 0.41125], # left back 2
+            [2.39645, -0.54843, 0.08445, -0.00101, 0.49278, 0.42958], # left back corner
+
+            [2.49654, -0.33109,  0.33812,  0.20139,  0.36231,  0.66868], # left side 0
+            [2.45996, -0.30908,  0.27832,  0.14336,  0.37009,  0.61117], # left side 1
+            [2.28403, 0.05687, 0.21994, 0.40305, 0.46293, 0.37193], # left side 2
+
+            
+            [-1.8205, 0.179, -0.2795, 0.256, -0.5694, 0.157], # right side 0
+            [-2.14235, -0.03702, -0.10883,  0.29092, -0.60736,  0.25515], # right side 1
+            [2.65787, -0.34722,  0.92235,  0.34916, -0.09080,  0.65794] # right side 2
+        ]
+        # Gripper angle in radians
+        tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
+        conti_move_idxs = [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 13, 14]
+        additional_linear_pts = [5, 6]
+        linear_idx = dict()
+        # For one axis, element at idx 7 (e7) is the original point, and the additional_linear_pts 
+        # are points that is obtained from moving parallel on an axis from e7
+        linear_idx['x'] = (additional_linear_pts+[7], additional_linear_pts,  0.05)
+
+        test_pt = [0, 4, 10, 15]
+        self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
+                            gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
+                            conti_move_idxs=conti_move_idxs, test_pt=test_pt)
+        
+
+    def shelf_div_sa(self):
+        experiment_name = "shelf_div_sa"
+        # roll pitch yaw x y z in meter
+        top_cam_cposes = [
+            [3.008, -0.668, 0.549, -0.16574, -0.268, 0.5065], # right back 0
+            [2.66052, -0.63052,  0.54405, -0.04024, -0.12987, 0.65001], # right back 1
+            [-2.31092, -0.24056, -0.99504, -0.21117, -0.12188, 0.41125], #right back 2
+            [-2.51890, -0.54126, -0.08807, -0.00074, -0.49342, 0.42817], # right back corner
+            [-2.76276, -0.63924, -0.79016, -0.00504,  0.01017,  0.64309], # left back 0
+            [-3.008, -0.5914, -0.633, -0.111, 0.2634, 0.485], # left back 1
+            [-3.008, -0.5914, -0.633, -0.061, 0.2634, 0.485], # left back 1 x + 5cm
+            [-3.008, -0.5914, -0.633, -0.011, 0.2634, 0.485], # left back 1 x + 10cm
+            [-2.71813, -0.86767, -0.69623, -0.06844, 0.09014, 0.69038], # left back 2
+            [2.39645, -0.54843, 0.08445, -0.00101, 0.49278, 0.42958], # left back corner
+            
+            [-2.87854, -0.62008, 0.39347, 0.15808, -0.43670, 0.48861], # right cside
+            [2.90352, -0.58821, 0.90963, 0.18867, -0.25014, 0.53657], # right side 0
+            [-2.89197, -0.22727, 0.26152, 0.38655, -0.20461, 0.65446], # right side 1
+
+            [2.41919, -0.40692, 0.26378, 0.13205, 0.42530, 0.46276], # left cside
+            [1.721, 0.179, 0.2195, 0.326, 0.5645, 0.1535], # left side 0
+            [2.49879, -0.33148,  0.33862,  0.29275,  0.36147,  0.66898] # left side 1
+        ]
+        # Gripper angle in radians
+        tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
+        conti_move_idxs = [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 13, 14]
+        additional_linear_pts = [5, 6]
+        test_pt = [1, 4, 13, 14]
+        linear_idx = dict()
+        linear_idx['x'] = (additional_linear_pts+[7], additional_linear_pts,  0.05)
+
+        self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
+                            gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
+                            conti_move_idxs=conti_move_idxs, test_pt=test_pt)
+        
