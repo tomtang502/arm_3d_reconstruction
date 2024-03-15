@@ -54,6 +54,34 @@ def combine_matrices(rot_matrix, translation_matrix):
     
     return combined_matrix
 
+def matrix_loss(matrix1, matrix2):
+    """
+    Calculate the scalar loss between two transformation matrices.
+
+    Args:
+    matrix1, matrix2: Numpy arrays representing the 4x4 transformation matrices.
+
+    Returns:
+    Scalar loss/error between the matrices.
+    """
+    # Calculate translation difference
+    translation1 = matrix1[:, 3]
+    translation2 = matrix2[:, 3]
+    translation_difference = np.linalg.norm(translation1 - translation2)
+
+    # Calculate rotation difference
+    rotation1 = matrix1[:3, :3]
+    rotation2 = matrix2[:3, :3]
+    rotation_difference = torch.linalg.pinv(rotation1) * rotation2
+    angle_difference = torch.norm(euler_angles = torch.nn.functional.rotation_matrix_to_euler(rotation_difference, 'XYZ'))
+
+    # Combine translation and rotation differences into a single scalar loss
+    loss = translation_difference + angle_difference
+    return loss
+
+
+
+
     
 focal_length = 727
 img_size =(640,480)
@@ -166,6 +194,7 @@ xyz_eef = np.stack(tmatw2c_to_xyz(eef_poses_o))
 gt_poses_os = rescale_pose_tag(ground_truth_poses, gt_poses_o, linear_idxs, x_d)
 
 T = caculate_calib_trans_mat(eef_poses_o, gt_poses_os)
+gt_poses_os = torch.stack([t for t in ground_truth_poses if isinstance(t, torch.Tensor)])
 gt_poses = T.float()@gt_poses_os.float()
 
 # xyz_R = im_poses_tor_o[:, :3, :3].float()
@@ -188,4 +217,10 @@ colmap_pose_dir = f"output/colmap_saved_output/{exp_name}/colmap_out.pth"
 dust3r_pose_dir = f"output/dust3r_saved_output/{exp_name}.pth"
 
 dust3r_out = torch.load(dust3r_pose_dir)
-colmap_out = torch.load(colmap_pose_dir)
+#colmap_out = torch.load(colmap_pose_dir)
+
+dus_idx = 0
+dust3r_poses = dust3r_out['poses']
+for i in range(16):
+    if isinstance(ground_truth_poses[i], torch.Tensor) and i not in pose_data.test_pt:
+        matrix_loss(ground_truth_poses[i], dust3r_poses[dus_idx])

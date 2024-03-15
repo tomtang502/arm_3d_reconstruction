@@ -108,6 +108,9 @@ def rescale_pose_ptc_col(cam_poses_map, poses_tor, ptc, linear_idx_x, x_d):
 def rescale_pose_tag(cam_poses_map, poses_tor, linear_idx_x, x_d):
     scale_factor = get_scale_factor_col(cam_poses_map, linear_idx_x, x_d)
     print(f"scale factor for 3d reconstruction by colmap: {scale_factor}")
+    for k in range(len(cam_poses_map)):
+        if isinstance(cam_poses_map[k], torch.Tensor):
+            cam_poses_map[k][:3, 3] = cam_poses_map[k][:3, 3] * scale_factor
     poses_tor[:,:3,3]=poses_tor[:,:3,3]*scale_factor
     return poses_tor
 
