@@ -4,7 +4,7 @@ import numpy as np
 
 from configs.experiments_data_config import ArmDustrExpData
 exp_config = ArmDustrExpData()
-exp_name = "8obj_divangs" # "4bs3sslb3_sa_apriltag"
+exp_name = "7obj_divangs"
 output_path = pathlib.Path(exp_config.get_ptc_output_path(exp_name, exp_type=1))
 print(output_path)
 image_dir = pathlib.Path(exp_config.get_images_dir(exp_name))

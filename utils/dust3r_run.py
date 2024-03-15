@@ -36,7 +36,6 @@ def running_dust3r(exp_name, out_name=None, out_dir=data_config.dustr_out_pth, b
     model = load_model(model_path, device)
     file_paths = data_config.get_images_paths(exp_name)
     images = load_images(file_paths, size=img_size)
-
     pairs = make_pairs(images, scene_graph='complete', prefilter=None, symmetrize=True)
     output = inference(pairs, model, device, batch_size=batch_size)
     scene = global_aligner(output, device=device, mode=GlobalAlignerMode.PointCloudOptimizer)
@@ -90,7 +89,7 @@ def extract_positions(transform_matrices):
 
 if __name__ == "__main__":
     # This is for submodule test and can be treated as a sample usage
-    exp_name = '8obj_divangs'
+    exp_name = '7obj_divangs'
     output_pose_pth, output_pc_pth = running_dust3r(exp_name)
     poses, pts_tor = load_pose_ptc(output_pose_pth, output_pc_pth)
     print(output_pose_pth, output_pc_pth)

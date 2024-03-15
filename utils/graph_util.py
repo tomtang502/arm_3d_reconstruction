@@ -83,7 +83,7 @@ def graph_double_struct(xyz1_stack, xyz2_stack, line_connect=False):
     y = xyz2_stack[:, 1]
     z = xyz2_stack[:, 2]
     # Scatter plot
-    ax.scatter(x, y, z, c='b', marker='o', s=5)
+    ax.scatter(x, y, z, c='b', marker='o', s=50)
 
 
     if line_connect:

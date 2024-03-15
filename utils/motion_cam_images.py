@@ -41,7 +41,7 @@ def generate_images(end_effector_angles, colmapimg_angs, tg_gripper_angs, comap_
         else:
             print(f"unable to capture frame {i}")
         cam.release()
-        if i not in conti_move_idxs:
+        if i not in conti_move_idxs or (i >= num_ori and i < total_num_images):
             arm.backToStart()
 
     arm.loopOff()

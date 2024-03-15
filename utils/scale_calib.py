@@ -84,10 +84,8 @@ def get_scale_factor_col(cam_poses_map, linear_idx_x, x_d):
         idx2 = linear_idx_x[i+1]
         pt2pt_trans = np.matmul(torch.linalg.pinv(cam_poses_map[idx1]), cam_poses_map[idx2])
         vec = apply_transform_pt([0.0, 0.0, 0.0], pt2pt_trans)
-        print(vec)
         #print(idx, cam_xyz_L[idx, cam_xyz_L[idx + 1,0])
         sum_dist += np.linalg.norm(vec)
-        print(sum_dist)
     scale_factor = x_d/(sum_dist/float(n-1))
     return scale_factor
 

@@ -67,10 +67,12 @@ class ArmDustrExpData():
     # configuration order in configs/observation_poses_config.py.
     def get_images_paths(self, exp_name, for_colmap=False):
         file_paths = get_file_paths(os.path.join(self.imgs_folder_pth, exp_name))
-        print(file_paths)
+        pose_data = self.get_obs_config(exp_name)
+        file_paths_train = [file_paths[i] for i in range(len(file_paths)) if i not in pose_data.test_pt]
+        print(file_paths_train)
         if not for_colmap:
-            file_paths = [f for f in file_paths if 'cm' not in f] 
-        return file_paths
+            file_paths_train = [f for f in file_paths_train if 'cm' not in f] 
+        return file_paths_train
     
     # Return the standard saved output paths (image_type = 0 -> arm_captured, 1 -> depth, 2 -> colemap)
     def get_ptc_output_path(self, exp_name, exp_type=0):
