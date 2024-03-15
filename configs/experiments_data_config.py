@@ -46,8 +46,8 @@ class ArmDustrExpData():
             'shelf_backonly': 'backonly_ori_sa',
 
 
-            'apriltag_divangs' : 'shelf_div_sa',
-            'apriltag_4cluster': 'shelf_4cl_sa',
+            'apriltag_divangsa' : 'shelf_div_sa',
+            'apriltag_4clustera': 'shelf_4cl_sa',
             'apriltag_backonlya': 'backonly_ori_sa',
         }
 

@@ -39,6 +39,7 @@ def running_dust3r(exp_name, out_name=None, out_dir=data_config.dustr_out_pth, b
     pairs = make_pairs(images, scene_graph='complete', prefilter=None, symmetrize=True)
     output = inference(pairs, model, device, batch_size=batch_size)
     scene = global_aligner(output, device=device, mode=GlobalAlignerMode.PointCloudOptimizer)
+
     loss = scene.compute_global_alignment(init="mst", niter=niter, schedule=schedule, lr=lr)
     print(f"Status: dust3r finished running with a loss of {loss}")
 
@@ -48,9 +49,11 @@ def running_dust3r(exp_name, out_name=None, out_dir=data_config.dustr_out_pth, b
     pts3d = scene.get_pts3d()
     confidence_masks = scene.get_masks()
     pts_list=[]
+
     for i in range(len(imgs)):
         sel_pts=pts3d[i][confidence_masks[i]]
         pts_list.append(sel_pts)
+
     pts_tor=torch.cat(pts_list).detach().cpu()
     poses = poses.detach().cpu()
     # Save each tensor separately

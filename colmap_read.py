@@ -17,7 +17,7 @@ Use this script to manually caliberate due to uncertainty of which point colmap 
 
 exp_config = ArmDustrExpData()
 exp_name = '7obj_divangs'
-col_out_path = "output/colmap_saved_output"
+col_out_path = f"output/colmap_saved_output/{exp_name}"
 reconstruction = pycolmap.Reconstruction(os.path.join(col_out_path, f"{exp_name}"))
 print(reconstruction.summary())
 
