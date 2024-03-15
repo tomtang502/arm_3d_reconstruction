@@ -31,7 +31,9 @@ def generate_images(end_effector_angles, colmapimg_angs, tg_gripper_angs, comap_
         success_captured, img = cam.read()
         
         if success_captured:
-            letter_idx = chr(ord('a') + i)
+            letter_idx = chr(ord('a') + i%26)
+            if i >= 26:
+                letter_idx = 'z' + letter_idx
             if i >= num_ori:
                 saved_name = f'{experiment_name}_{letter_idx}_cm.{save_format}'
             else:
