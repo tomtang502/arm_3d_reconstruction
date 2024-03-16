@@ -16,9 +16,9 @@ Use this script to manually caliberate due to uncertainty of which point colmap 
 """
 
 exp_config = ArmDustrExpData()
-exp_name = '7obj_divangs'
+exp_name = 'shelf_divangs'
 col_out_path = f"output/colmap_saved_output/{exp_name}"
-reconstruction = pycolmap.Reconstruction(os.path.join(col_out_path, f"{exp_name}"))
+reconstruction = pycolmap.Reconstruction(col_out_path)
 print(reconstruction.summary())
 
 pose_data = exp_config.get_obs_config(exp_name)
@@ -31,8 +31,12 @@ idx_map = dict()
 col_cam_poses_map = dict()
 i = 0
 for image_id, image in reconstruction.images.items():
-    name = image.name[:-len('.jpg')]
-    idx = ord(name.split('_')[2]) - ord('a')
+    name = image.name[:-len('.jpg')].split('_')[2]
+    idx = 0
+    if len(name) == 1:
+        idx = ord(name) - ord('a')
+    else:
+        idx = 26 + ord(name[1]) - ord('a')
     selected_idx.append(idx)
     idx_map[idx] = i
     i += 1
@@ -73,7 +77,7 @@ im_poses_tor_o, ptc_tor_o = rescale_pose_ptc_col(col_cam_poses_map, poses_tor, p
 
 ### Use rearrange to make sure no consecutive linear matrices (CHANGE HERE)
 #reorder_idxs = [22, 21, 20, 19, 18, 17, 16, 0, 13, 1, 14, 2, 15, 3, 4, 8, 9]
-reorder_idxs = [25, 22, 21, 20, 19, 18, 17, 16, 15, 0, 13, 1, 14, 2, 3, 4, 7, 8, 9, 10]
+reorder_idxs = [23, 22, 0, 17, 2, 18, 5, 20, 6, 21, 7, 8, 9, 16, 19]
 reorder_idxs = [idx_map[idx] for idx in reorder_idxs]
 eef_poses_tor_calib, im_poses_tor_o_calib = geomu.rearrange(eef_poses_tor_selected.float(), 
                                                             im_poses_tor_o.float(), 
@@ -98,10 +102,13 @@ xyz = np.stack(geomu.tmatw2c_to_xyz(im_poses_tor))
 xyz_eef = np.stack(geomu.tmatw2c_to_xyz(eef_poses_tor_selected))
 plotty_graph_multistruct([xyz, xyz_eef, ptc_tor], ['cam_pose', 'eef', 'point cloud'], 
                          [2, 2, 0.5])
+
+
 # Placing tensors in a dictionary
 tensors_to_save = {
     'poses': im_poses_tor,
-    'dense_pt': ptc_tor
+    'dense_pt': ptc_tor,
+    'idx': torch.tensor(selected_idx)
 }
 
 # Saving the dictionary of tensors to a file

@@ -8,6 +8,7 @@ from utils.geometric_util import *
 from utils.graph_util import *
 from utils.scale_calib import *
 from configs.experiments_data_config import ArmDustrExpData
+from scipy.spatial.transform import Rotation as R
 
 exp_config = ArmDustrExpData()
 
@@ -73,11 +74,16 @@ def matrix_loss(matrix1, matrix2):
     rotation1 = matrix1[:3, :3]
     rotation2 = matrix2[:3, :3]
     rotation_difference = torch.linalg.pinv(rotation1) * rotation2
-    angle_difference = torch.norm(euler_angles = torch.nn.functional.rotation_matrix_to_euler(rotation_difference, 'XYZ'))
+    
+    rotation = R.from_matrix(rotation_difference)
+
+    # Convert to Euler angles, specifying the axes sequence
+    euler_angles = rotation.as_euler('XYZ')
+    angle_difference = torch.norm(torch.tensor(euler_angles))
 
     # Combine translation and rotation differences into a single scalar loss
-    loss = translation_difference + angle_difference
-    return loss
+    #loss = translation_difference + angle_difference
+    return translation_difference, angle_difference
 
 
 
@@ -111,7 +117,7 @@ distortion_coeffs = np.array([])
 # ----------------------------------------------- #
 ###################### Main #######################
 # ----------------------------------------------- #
-expap_name = "apriltag_divangs"
+expap_name = "apriltag_divangsa"
 linear_idxs = [5, 6, 7]
 remove_idx = [25, 26, 27]
 x_d = 0.05
@@ -148,8 +154,9 @@ def find_common_element(dict1, dict2, dict3, priority):
             return num
     return None
     
-
+print(frequency)
 selected_pose = find_common_element(tags_cent_list[5], tags_cent_list[6], tags_cent_list[7], frequency)
+print(selected_pose)
 
 ground_truth_poses = [] # size 28
 for i in range(len(file_paths)):
@@ -161,7 +168,10 @@ for i in range(len(file_paths)):
 print(f"Ground truth always has size {len(ground_truth_poses)}")
 gt_idxs = [i for i in range(len(ground_truth_poses)) if isinstance(ground_truth_poses[i], torch.Tensor)]
 print(gt_idxs)
-exp_name = "8obj_divangs"
+
+############################################
+exp_name = "shelf_divangs"
+############################################
 
 xyz_gt = tmatw2c_to_xyz([torch.linalg.pinv(tmat) for tmat in ground_truth_poses if isinstance(tmat, torch.Tensor)])
 xyz_gt = torch.stack(xyz_gt)
@@ -172,8 +182,8 @@ for i in linear_idxs:
         exit(1)
 
 pose_data = exp_config.get_obs_config(exp_name)
-eef_poses_o = pose_data.poses + pose_data.additional_colmap_pose
-eef_poses_tor=pose_to_transform(torch.tensor(eef_poses_o))
+eef_poses_all = pose_data.poses + pose_data.additional_colmap_pose
+eef_poses_tor=pose_to_transform(torch.tensor(eef_poses_all))
 
 gt_poses_o = []
 eef_poses_o = []
@@ -186,30 +196,27 @@ for i in range(len(ground_truth_poses)):
 gt_poses_o = torch.stack(gt_poses_o)
 eef_poses_o = torch.stack(eef_poses_o)
 
-xyz = np.stack(tmatw2c_to_xyz(gt_poses_o))
-xyz_eef = np.stack(tmatw2c_to_xyz(eef_poses_o))
-#graph_double_struct(xyz, xyz_eef)
-
 
 gt_poses_os = rescale_pose_tag(ground_truth_poses, gt_poses_o, linear_idxs, x_d)
 
 T = caculate_calib_trans_mat(eef_poses_o, gt_poses_os)
+for i in range(len(ground_truth_poses)):
+    if isinstance(ground_truth_poses[i], torch.Tensor):
+        ground_truth_poses[i] = T.float()@ground_truth_poses[i].float()
 gt_poses_os = torch.stack([t for t in ground_truth_poses if isinstance(t, torch.Tensor)])
-gt_poses = T.float()@gt_poses_os.float()
 
-# xyz_R = im_poses_tor_o[:, :3, :3].float()
-# xyz_RT = -np.transpose(xyz_R, [0,2,1])
-# xyz = im_poses_tor_o[:, :3, -1].float()
-# for i in range(26):
-#     xyz[i] = xyz_RT[i]@xyz[i]
+# # xyz_R = im_poses_tor_o[:, :3, :3].float()
+# # xyz_RT = -np.transpose(xyz_R, [0,2,1])
+# # xyz = im_poses_tor_o[:, :3, -1].float()
+# # for i in range(26):
+# #     xyz[i] = xyz_RT[i]@xyz[i]
 
 # xyz_eef = eef_poses_tor_calib[:, :3, -1].float()
+# eef_poses_o = torch.stack([eef_poses_tor[i] for i in range(len(ground_truth_poses)) if isinstance(ground_truth_poses[i], torch.Tensor)])
+# xyz_gt = np.stack(tmatw2c_to_xyz(gt_poses_os))
+# xyz_eef = np.stack(tmatw2c_to_xyz(eef_poses_o))
 
-xyz_gt = tmatw2c_to_xyz(gt_poses)
-xyz_gt = np.stack(xyz_gt)
-
-
-graph_double_struct(xyz_gt, xyz_eef)
+# graph_double_struct(xyz_gt, xyz_eef)
 
 
 print("Run Comparison")
@@ -217,10 +224,52 @@ colmap_pose_dir = f"output/colmap_saved_output/{exp_name}/colmap_out.pth"
 dust3r_pose_dir = f"output/dust3r_saved_output/{exp_name}.pth"
 
 dust3r_out = torch.load(dust3r_pose_dir)
-#colmap_out = torch.load(colmap_pose_dir)
+colmap_out = torch.load(colmap_pose_dir)
+
+
+dust3r_poses = dust3r_out['poses']
+colmap_poses = colmap_out['poses']
+col_idx = colmap_out['idx']
+print(dust3r_poses.shape)
+loss1_R, loss1_t, loss2_R, loss2_t = 0, 0, 0, 0
 
 dus_idx = 0
-dust3r_poses = dust3r_out['poses']
+cpose, dpose, gtpose1, gtpose2, eefpose1, eefpose2= [], [], [], [], [], []
 for i in range(16):
     if isinstance(ground_truth_poses[i], torch.Tensor) and i not in pose_data.test_pt:
-        matrix_loss(ground_truth_poses[i], dust3r_poses[dus_idx])
+        dpose.append(dust3r_poses[dus_idx])
+        gtpose1.append(ground_truth_poses[i].float())
+        eefpose1.append(eef_poses_tor[i])
+        inct, incR = matrix_loss((ground_truth_poses[i].float()), dust3r_poses[dus_idx])
+        loss1_t, loss1_R = loss1_t + inct, loss1_R + incR
+        dus_idx += 1
+        #print(loss.item())
+
+num = 0
+print(len(colmap_poses) == len(col_idx))
+for i in range(28):
+    if isinstance(ground_truth_poses[i], torch.Tensor) and i not in pose_data.test_pt and i in col_idx:
+        cpose_single = None
+        for j in range(len(colmap_poses)):
+            if col_idx[j] == i:
+                cpose_single = colmap_poses[j]
+                cpose.append(cpose_single)
+                break
+        gtpose2.append(ground_truth_poses[i].float())
+        eefpose2.append(eef_poses_tor[i])
+        inct, incR = matrix_loss((ground_truth_poses[i].float()), cpose_single)
+        loss2_t, loss2_R = loss2_t + inct, loss2_R + incR
+        num += 1
+
+loss1_R = loss1_R / (dus_idx)
+loss1_t = loss1_t / (dus_idx)
+loss2_R = loss2_R / (num)
+loss2_t = loss2_t / (num)
+print("dust3r: ", loss1_R.item(), loss1_t)
+print("colmap: ", loss2_R.item(), loss2_t)
+xyz_gt = np.stack(tmatw2c_to_xyz(dpose))
+xyz_d = np.stack(tmatw2c_to_xyz(cpose))
+xyz_e = np.stack(tmatw2c_to_xyz(eefpose2))
+# graph_double_struct(xyz_d, xyz_e)
+graph_double_struct(xyz_e, xyz_gt)
+plotty_graph_multistruct([xyz_d, xyz_gt, xyz_e], ['d', 'gt', 'eef'], [5,5,5])

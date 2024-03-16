@@ -5,7 +5,7 @@ import shutil
 
 from configs.experiments_data_config import ArmDustrExpData
 exp_config = ArmDustrExpData()
-exp_name = "7obj_divangs"
+exp_name = "7obj_4cluster"
 
 import os
 import shutil
@@ -59,7 +59,7 @@ tmp_folder = copy_images_to_tmp(original_folder, pose_data.test_pt, "output")
 # Copy images to the temporary folder under the parent folder
 print("Images copied to temporary folder:", tmp_folder)
 print(output_path)
-image_dir = pathlib.Path()
+image_dir = pathlib.Path(tmp_folder)
 
 output_path.mkdir()
 mvs_path = output_path / "mvs"
