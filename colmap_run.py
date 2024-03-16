@@ -36,7 +36,7 @@ def copy_images_to_tmp(original_folder, idxs, parent_folder):
             original_path = os.path.join(original_folder, filename)
             if os.path.isfile(original_path):
                 shutil.copy(original_path, tmp_folder)
-        idx += 1
+        i += 1
 
     return tmp_folder
 
@@ -55,7 +55,7 @@ def delete_tmp_folder(tmp_folder):
 output_path = pathlib.Path(exp_config.get_ptc_output_path(exp_name, exp_type=1))
 original_folder = exp_config.get_images_dir(exp_name)
 pose_data = exp_config.get_obs_config(exp_name)
-tmp_folder = copy_images_to_tmp(original_folder, pose_data.test_pt, exp_config.get_ptc_output_path(exp_name, exp_type=1))
+tmp_folder = copy_images_to_tmp(original_folder, pose_data.test_pt, "output")
 # Copy images to the temporary folder under the parent folder
 print("Images copied to temporary folder:", tmp_folder)
 print(output_path)
