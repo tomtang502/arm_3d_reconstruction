@@ -117,7 +117,7 @@ distortion_coeffs = np.array([])
 # ----------------------------------------------- #
 ###################### Main #######################
 # ----------------------------------------------- #
-expap_name = "apriltag_divangsa"
+expap_name = "apriltag_4cluster"
 linear_idxs = [5, 6, 7]
 remove_idx = [25, 26, 27]
 x_d = 0.05
@@ -170,7 +170,7 @@ gt_idxs = [i for i in range(len(ground_truth_poses)) if isinstance(ground_truth_
 print(gt_idxs)
 
 ############################################
-exp_name = "shelf_divangs"
+exp_name = "7obj_4cluster"
 ############################################
 
 xyz_gt = tmatw2c_to_xyz([torch.linalg.pinv(tmat) for tmat in ground_truth_poses if isinstance(tmat, torch.Tensor)])
@@ -269,7 +269,7 @@ print("dust3r: ", loss1_R.item(), loss1_t)
 print("colmap: ", loss2_R.item(), loss2_t)
 xyz_gt = np.stack(tmatw2c_to_xyz(dpose))
 xyz_d = np.stack(tmatw2c_to_xyz(cpose))
-xyz_e = np.stack(tmatw2c_to_xyz(eefpose2))
+xyz_e = np.stack(tmatw2c_to_xyz(eefpose1))
 # graph_double_struct(xyz_d, xyz_e)
 graph_double_struct(xyz_e, xyz_gt)
-plotty_graph_multistruct([xyz_d, xyz_gt, xyz_e], ['d', 'gt', 'eef'], [5,5,5])
+plotty_graph_multistruct([xyz_d, xyz_gt, xyz_e], ['d', 'c', 'eef'], [5,5,5])

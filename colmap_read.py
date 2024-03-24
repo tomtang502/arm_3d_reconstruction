@@ -16,7 +16,7 @@ Use this script to manually caliberate due to uncertainty of which point colmap 
 """
 
 exp_config = ArmDustrExpData()
-exp_name = 'shelf_divangs'
+exp_name = '7obj_4cluster'
 col_out_path = f"output/colmap_saved_output/{exp_name}"
 reconstruction = pycolmap.Reconstruction(col_out_path)
 print(reconstruction.summary())
@@ -77,7 +77,7 @@ im_poses_tor_o, ptc_tor_o = rescale_pose_ptc_col(col_cam_poses_map, poses_tor, p
 
 ### Use rearrange to make sure no consecutive linear matrices (CHANGE HERE)
 #reorder_idxs = [22, 21, 20, 19, 18, 17, 16, 0, 13, 1, 14, 2, 15, 3, 4, 8, 9]
-reorder_idxs = [23, 22, 0, 17, 2, 18, 5, 20, 6, 21, 7, 8, 9, 16, 19]
+reorder_idxs = [17, 16, 7, 9, 8, 6, 18, 2, 5]
 reorder_idxs = [idx_map[idx] for idx in reorder_idxs]
 eef_poses_tor_calib, im_poses_tor_o_calib = geomu.rearrange(eef_poses_tor_selected.float(), 
                                                             im_poses_tor_o.float(), 

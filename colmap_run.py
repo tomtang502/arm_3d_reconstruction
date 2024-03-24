@@ -30,6 +30,8 @@ def copy_images_to_tmp(original_folder, idxs, parent_folder):
     filenames = os.listdir(original_folder)
     filenames.sort()
     # Copy images to the temporary folder
+    n = 18
+    
     for filename in filenames:
         if (filename.endswith(('.jpg', '.jpeg', '.png', '.gif')) and
             i not in idxs):
@@ -37,6 +39,8 @@ def copy_images_to_tmp(original_folder, idxs, parent_folder):
             if os.path.isfile(original_path):
                 shutil.copy(original_path, tmp_folder)
         i += 1
+        if i > n:
+            break
 
     return tmp_folder
 
