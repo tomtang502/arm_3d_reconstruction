@@ -1,14 +1,22 @@
 import pycolmap
 import pathlib, os#, torch
 import numpy as np
-import shutil
+import shutil, argparse
 
 from configs.experiments_data_config import ArmDustrExpData
 exp_config = ArmDustrExpData()
-exp_name = "7obj_4cluster"
 
-import os
-import shutil
+# Create the parser
+parser = argparse.ArgumentParser(description='Example script that accepts a string argument.')
+
+# Add an argument
+parser.add_argument('exp_name', type=str, help='An experiment name')
+
+# Execute the parse_args() method
+args = parser.parse_args()
+
+# Store the argument in a variable
+exp_name = args.exp_name
 
 def copy_images_to_tmp(original_folder, idxs, parent_folder):
     """
