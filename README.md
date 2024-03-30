@@ -1,1 +1,1 @@
-Teaching arm path planning project led by Will.
+Teaching arm path planning project led by Will @ DROP Lab.
