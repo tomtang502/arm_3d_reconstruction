@@ -6,7 +6,7 @@ import os
 import copy
 from utils.geometric_util import *
 from utils.graph_util import *
-from utils.scale_calib import *
+from utils.fix_scale_calib import *
 from configs.experiments_data_config import ArmDustrExpData
 from scipy.spatial.transform import Rotation as R
 

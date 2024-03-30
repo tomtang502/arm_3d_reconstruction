@@ -9,7 +9,7 @@ import pycolmap
 import utils.geometric_util as geomu
 from utils.graph_util import graph_single_struct, graph_double_struct, plotty_graph_multistruct
 from configs.experiments_data_config import ArmDustrExpData
-from utils.scale_calib import *
+from utils.fix_scale_calib import *
 
 """
 Use this script to manually caliberate due to uncertainty of which point colmap will take

@@ -178,10 +178,8 @@ class ExperimentConfigs():
         # Gripper angle in radians
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
         conti_move_idxs = [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 13, 14]
-        additional_linear_pts = [5, 6]
         test_pt = [1, 4, 13, 14]
-        linear_idx = dict()
-        linear_idx['x'] = (additional_linear_pts+[7], additional_linear_pts,  0.05)
+        linear_idx = [5, 6]
 
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
@@ -212,12 +210,8 @@ class ExperimentConfigs():
         # Gripper angle in radians
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
         conti_move_idxs = [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 13, 14]
-        additional_linear_pts = [5, 6]
-        linear_idx = dict()
-        # For one axis, element at idx 7 (e7) is the original point, and the additional_linear_pts 
-        # are points that is obtained from moving parallel on an axis from e7
-        linear_idx['x'] = (additional_linear_pts+[7], additional_linear_pts,  0.05)
-
+        
+        linear_idx = [5, 6]
         test_pt = [0, 4, 10, 15]
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
@@ -248,11 +242,8 @@ class ExperimentConfigs():
         # Gripper angle in radians
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
         conti_move_idxs = [i for i in range(16) if i not in [6, 15]]
-        additional_linear_pts = [8, 9]
-        linear_idx = dict()
-        # For one axis, element at idx 7 (e7) is the original point, and the additional_linear_pts 
-        # are points that is obtained from moving parallel on an axis from e7
-        linear_idx['x'] = (additional_linear_pts+[10], additional_linear_pts,  0.05)
+        
+        linear_idx = [8, 9]
         test_pt = [0, 6, 7, 14]
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
@@ -285,12 +276,7 @@ class ExperimentConfigs():
         # Gripper angle in radians
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
         conti_move_idxs = [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 13, 14]
-        additional_linear_pts = [5, 6]
-        linear_idx = dict()
-        # For one axis, element at idx 7 (e7) is the original point, and the additional_linear_pts 
-        # are points that is obtained from moving parallel on an axis from e7
-        linear_idx['x'] = (additional_linear_pts+[7], additional_linear_pts,  0.05)
-
+        linear_idx = [5, 6]
         test_pt = [0, 4, 10, 15]
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
@@ -323,10 +309,8 @@ class ExperimentConfigs():
         # Gripper angle in radians
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
         conti_move_idxs = [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 13, 14]
-        additional_linear_pts = [5, 6]
         test_pt = [1, 4, 13, 14]
-        linear_idx = dict()
-        linear_idx['x'] = (additional_linear_pts+[7], additional_linear_pts,  0.05)
+        linear_idx = [5, 6]
 
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 
