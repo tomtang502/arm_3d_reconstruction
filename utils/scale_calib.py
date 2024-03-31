@@ -11,10 +11,13 @@ project_folder = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(project_folder)
 from utils.scale_calib_helper import *
 
-def computer_arm(eef_poses_selected, w2c_poses_selected):
+def computer_arm(eef_poses_selected, w2c_poses_selected, colmap=False):
     
     w2c_poses_selected_scale_cpy = w2c_poses_selected.clone()
-    vals_sc=np.linspace(1,4,20000).reshape(-1)
+    if colmap:
+        vals_sc=np.linspace(0.001,0.5,20000).reshape(-1)
+    else:
+        vals_sc=np.linspace(1,4,20000).reshape(-1)
     A, B, Rx, N=compute_A_B_Rx(eef_poses_selected,w2c_poses_selected_scale_cpy)
 
 
@@ -29,6 +32,7 @@ def computer_arm(eef_poses_selected, w2c_poses_selected):
 
     min_inds=torch.argmin(costs_tor)
     scale=vals_sc[min_inds]
+    #scale=0.025
     print("scale found: {}".format(scale))
 
     w2c_poses_selected[:, :3,3]=w2c_poses_selected[:, :3, 3] * scale

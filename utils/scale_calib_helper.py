@@ -128,3 +128,28 @@ def scale_calib_pose_process(eef_poses_tr, dust3r_poses, test_idx, linear_idx):
     dust3r_sc_used = dust3r_poses[dust3r_useful_idx]
     eef_nontest = eef_poses_tr[eef_nontest_idx]
     return eef_sc_used, dust3r_sc_used, eef_nontest
+
+
+def get_colmap_useidx(num_eef, col_selected_idx, test_idx, linear_idx):
+    eef_useful_idx, colmap_useful_idx, eef_nontest_idx = [], [], []
+    cur_idx = 0
+    for i in range(num_eef):
+        if i not in test_idx and i in col_selected_idx:
+            eef_nontest_idx.append(i)
+            if i not in linear_idx:
+                if cur_idx < len(col_selected_idx):
+                    colmap_useful_idx.append(cur_idx)
+                    eef_useful_idx.append(i)
+            cur_idx += 1
+            
+    return eef_useful_idx, colmap_useful_idx, eef_nontest_idx
+
+def scale_calib_pose_process_col(eef_poses_tr, colmap_poses, col_selected_idx, test_idx, linear_idx):
+    linear_idx = linear_idx + [25, 26]
+    eef_useful_idx, colmap_useful_idx, eef_nontest_idx = get_colmap_useidx(len(eef_poses_tr), 
+                                                                           col_selected_idx, 
+                                                                           test_idx, linear_idx)
+    eef_sc_used = eef_poses_tr[eef_useful_idx]
+    colmap_sc_used = colmap_poses[colmap_useful_idx]
+    eef_nontest = eef_poses_tr[eef_nontest_idx]
+    return eef_sc_used, colmap_sc_used, eef_nontest
