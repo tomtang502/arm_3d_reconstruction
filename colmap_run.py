@@ -159,8 +159,8 @@ eef_sc_used, colmap_sc_used, eef_nontest = scale_calib_pose_process_col(eef_pose
                                                                             pose_data.linearidx)
 xyz = np.stack(geomu.tmatw2c_to_xyz(im_poses_tor_o))
 xyz_eef = np.stack(geomu.tmatw2c_to_xyz(eef_nontest))
-graph_double_struct(xyz_eef, xyz)
-print(eef_nontest.shape, im_poses_tor_o.shape)
+#graph_double_struct(xyz_eef, xyz)
+print(eef_nontest.shape, "should be same as", im_poses_tor_o.shape)
 assert eef_nontest.shape == im_poses_tor_o.shape, "Number of eef != Number of cam poses!"
 
 
@@ -173,7 +173,7 @@ ptc_tor_o = ptc_tor*scale
 colmap_pose, colmap_ptc = transpose_poses_ptc(im_poses_tor_o.float(), ptc_tor_o.float(), T)
 
 
-# #Visualize constructed ptc
+#Visualize constructed ptc
 # pts_tor_n = colmap_ptc[::300]
 # cam_pos_n=colmap_pose[:,:3,3]
 # eff_poses_n=eef_nontest[:,:3,3]
@@ -181,3 +181,17 @@ colmap_pose, colmap_ptc = transpose_poses_ptc(im_poses_tor_o.float(), ptc_tor_o.
 #                          ["arm end-effector", "camera pose", "point cloud"],
 #                          [2, 2, 0.3])
 
+
+tensors_to_save = {
+    'poses': colmap_pose,
+    'dense_pt': colmap_ptc,
+    'eef_poses': eef_nontest,
+    'T' : T
+}
+
+# Saving the dictionary of tensors to a file
+saving_loc = os.path.join("output/colmap_saved_output", f'{exp_name}_{num_imgs}.pth')
+torch.save(tensors_to_save, saving_loc)
+print("="*10)
+print(f"colmap out saved at {saving_loc}")
+print("="*10)

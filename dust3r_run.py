@@ -50,13 +50,13 @@ ptc_tor_o = ptc_tor_o*scale
 dust3r_pose, dust3r_ptc = transpose_poses_ptc(im_poses_tor_o, ptc_tor_o, T)
 
 
-# Visualize constructed ptc
-# pts_tor_n = dust3r_ptc[::300]
-# cam_pos_n=dust3r_pose[:,:3,3]
-# eff_poses_n=eef_nontest[:,:3,3]
-# plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
-#                          ["arm end-effector", "camera pose", "point cloud"],
-#                          [2, 2, 0.3])
+#Visualize constructed ptc
+pts_tor_n = dust3r_ptc[::300]
+cam_pos_n=dust3r_pose[:,:3,3]
+eff_poses_n=eef_nontest[:,:3,3]
+plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
+                         ["arm end-effector", "camera pose", "point cloud"],
+                         [2, 2, 0.3])
 
 tensors_to_save = {
     'poses': dust3r_pose,
@@ -68,4 +68,6 @@ tensors_to_save = {
 # Saving the dictionary of tensors to a file
 saving_loc = os.path.join("output/dust3r_saved_output", f'{exp_name}.pth')
 torch.save(tensors_to_save, saving_loc)
+print("="*10)
 print(f"dust3r out saved at {saving_loc}")
+print("="*10)
