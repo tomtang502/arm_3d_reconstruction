@@ -1,0 +1,16 @@
+output/colmap_saved_output
+tensors_to_save = {
+    'poses': colmap_pose,
+    'dense_pt': colmap_ptc,
+    'eef_poses': eef_nontest,
+    'T' : T
+}
+
+output/dust3r_saved_output
+tensors_to_save = {
+    'poses': dust3r_pose,
+    'dense_pt': dust3r_ptc,
+    'eef_poses': eef_nontest,
+    'T' : T,
+    'eef_idx': eef_nontest_idx
+}
