@@ -110,10 +110,9 @@ def get_dust3r_useidx(num_eef, num_dust3r, test_idx, linear_idx):
     eef_useful_idx, dust3r_useful_idx, eef_nontest_idx = [], [], []
     cur_idx = 0
     for i in range(num_eef):
-        if i not in test_idx:
+        if i not in test_idx and cur_idx < num_dust3r:
             eef_nontest_idx.append(i)
             if i not in linear_idx:
-                if cur_idx < num_dust3r:
                     dust3r_useful_idx.append(cur_idx)
                     eef_useful_idx.append(i)
             cur_idx += 1
@@ -127,7 +126,7 @@ def scale_calib_pose_process(eef_poses_tr, dust3r_poses, test_idx, linear_idx):
     eef_sc_used = eef_poses_tr[eef_useful_idx]
     dust3r_sc_used = dust3r_poses[dust3r_useful_idx]
     eef_nontest = eef_poses_tr[eef_nontest_idx]
-    return eef_sc_used, dust3r_sc_used, eef_nontest
+    return eef_sc_used, dust3r_sc_used, eef_nontest, eef_nontest_idx
 
 
 def get_colmap_useidx(num_eef, col_selected_idx, test_idx, linear_idx):

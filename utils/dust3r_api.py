@@ -31,10 +31,10 @@ Several utils for running dust3r and extracting camera poses and points cloud.
 Their functionality is literally explained by their name.
 """
 
-def running_dust3r(exp_name, out_name=None, out_dir=data_config.dustr_out_pth, batch_size=4, 
+def running_dust3r(exp_name, num_imgs, out_name=None, out_dir=data_config.dustr_out_pth, batch_size=4, 
                    schedule="cosine", lr=0.01, niter=320, device="cuda", model_path=std_model_pth):
     model = load_model(model_path, device)
-    file_paths = data_config.get_images_paths(exp_name)
+    file_paths = data_config.get_images_paths(exp_name, num_imgs=num_imgs)
     images = load_images(file_paths, size=img_size)
     pairs = make_pairs(images, scene_graph='complete', prefilter=None, symmetrize=True)
     output = inference(pairs, model, device, batch_size=batch_size)
@@ -72,7 +72,7 @@ def load_pose_ptc(output_pose_pth, output_pc_pth):
     poses = torch.load(output_pose_pth)
     return poses, pts_tor
 
-def load_pose_from_exp_name(exp_name):
+def load_pose_from_exp_name(exp_name, num_imgs):
     ptc_pth = data_config.get_ptc_output_path(exp_name)
     poses_pth = data_config.get_cam_pose_path(exp_name)
     if os.path.isfile(ptc_pth) and os.path.isfile(poses_pth):
@@ -82,7 +82,7 @@ def load_pose_from_exp_name(exp_name):
         if exp_name not in data_config.expnames:
             raise Exception(f"{exp_name} not configured, please configuring it in configs/experiments_data_config.py")
         else:
-            output_pose_pth, output_pc_pth = running_dust3r(exp_name)
+            output_pose_pth, output_pc_pth = running_dust3r(exp_name, num_imgs)
             return load_pose_ptc(output_pose_pth, output_pc_pth)
 
 def extract_positions(transform_matrices):

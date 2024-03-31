@@ -73,13 +73,17 @@ class ArmDustrExpData():
     # Return list of image paths
     # If image_type=0 then they are sorted so their order is corresponded to the angles 
     # configuration order in configs/observation_poses_config.py.
-    def get_images_paths(self, exp_name, for_colmap=False):
+    def get_images_paths(self, exp_name, for_colmap=False, num_imgs=None):
         file_paths = get_file_paths(os.path.join(self.imgs_folder_pth, exp_name))
         pose_data = self.get_obs_config(exp_name)
         file_paths_train = [file_paths[i] for i in range(len(file_paths)) if i not in pose_data.test_pt]
-        print(file_paths_train)
-        if not for_colmap:
-            file_paths_train = [f for f in file_paths_train if 'cm' not in f] 
+        print("total_traning_imgs:", len(file_paths_train))
+        if num_imgs != None:
+            file_paths_train = file_paths_train[:num_imgs]
+            print(f"Training on {len(file_paths_train)} images")
+        else:
+            if not for_colmap:
+                file_paths_train = [f for f in file_paths_train if 'cm' not in f] 
         return file_paths_train
     
     # Return the standard saved output paths (image_type = 0 -> arm_captured, 1 -> depth, 2 -> colemap)
