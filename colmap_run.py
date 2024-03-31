@@ -173,7 +173,7 @@ ptc_tor_o = ptc_tor*scale
 colmap_pose, colmap_ptc = transpose_poses_ptc(im_poses_tor_o.float(), ptc_tor_o.float(), T)
 
 
-#Visualize constructed ptc
+# Visualize constructed ptc
 # pts_tor_n = colmap_ptc[::300]
 # cam_pos_n=colmap_pose[:,:3,3]
 # eff_poses_n=eef_nontest[:,:3,3]

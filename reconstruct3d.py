@@ -45,11 +45,15 @@ exp_name_list = ['8obj_divangs',
 
 """
 for exp_name in exp_name_list:
-    for i in range(10, 21):
+    for i in range(10, 25):
         model_path = f'output/colmap_saved_output/{exp_name}'
+        output_path = os.path.join("output/colmap_saved_output", f'{exp_name}_{i}.pth')
         if os.path.exists(model_path):
             shutil.rmtree(model_path)
-        subprocess.run([comap_env_path, runcolmap_path, exp_name, str(i)])
+        if not os.path.exists(output_path):
+            subprocess.run([comap_env_path, runcolmap_path, exp_name, str(i)])
+        else:
+            print(output_path, "already done")
     
 
 # Assume script2.py is also modified to accept command-line arguments
