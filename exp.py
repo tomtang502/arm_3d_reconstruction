@@ -10,21 +10,13 @@ from utils.fix_scale_calib import transpose_poses_ptc
 from configs.experiments_data_config import ArmDustrExpData
 exp_config = ArmDustrExpData()
 
-# Create the parser
-parser = argparse.ArgumentParser(description='Example script that accepts a string argument.')
-
-# Add an argument
-parser.add_argument('exp_name', type=str, help='An experiment name')
-parser.add_argument('num_imgs', type=int, help='Number of images to consider')
-
-# Execute the parse_args() method
-args = parser.parse_args()
-
 # Store the argument in a variable
-exp_name = args.exp_name
-num_imgs = args.num_imgs
+exp_name = "7obj_backonly"
+num_imgs = 20
+"""
+=======================
+"""
 writing_file = 'output/colmap_calib_loss.txt'
-
 def copy_images_to_tmp(original_folder, idxs, parent_folder, n_imgs):
     """
     Copy specified images from the original folder to a temporary folder under the specified parent folder.
@@ -166,13 +158,11 @@ assert eef_nontest.shape == im_poses_tor_o.shape, "Number of eef != Number of ca
 
 
 ### Solving for scale and then do caliberation
-T, scale, J, R_L, t_L  = computer_arm(eef_sc_used, colmap_sc_used, colmap=True)
+T, scale, J, R_L, t_L = computer_arm(eef_sc_used, colmap_sc_used, colmap=True)
 im_poses_tor_o[:,:3,3]=im_poses_tor_o[:,:3,3]*scale
 ptc_tor_o = ptc_tor*scale
 
-
-loss_info = f'{exp_name}_{num_imgs} trans loss: {t_L.mean()}, rot loss: {R_L.mean()}\n'
-
+loss_info = f'exp{exp_name}_{num_imgs} trans loss: {t_L.mean()}, rot loss: {R_L.mean()}\n'
 print(loss_info)
 with open(writing_file, 'a') as file:
     file.write(loss_info) 
@@ -188,7 +178,6 @@ colmap_pose, colmap_ptc = transpose_poses_ptc(im_poses_tor_o.float(), ptc_tor_o.
 #                          ["arm end-effector", "camera pose", "point cloud"],
 #                          [2, 2, 0.3])
 
-
 tensors_to_save = {
     'poses': colmap_pose,
     'dense_pt': colmap_ptc,
@@ -199,9 +188,8 @@ tensors_to_save = {
     'rot_L' : torch.tensor(R_L)
 }
 
-
 # Saving the dictionary of tensors to a file
-saving_loc = os.path.join("output/colmap_saved_output", f'{exp_name}_{num_imgs}.pth')
+saving_loc = os.path.join("output/colmap_saved_output", f'exp{exp_name}_{num_imgs}.pth')
 torch.save(tensors_to_save, saving_loc)
 print("="*10)
 print(f"colmap out saved at {saving_loc}")

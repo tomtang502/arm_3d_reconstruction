@@ -1,0 +1,4 @@
+exp8obj_divangs_15 trans loss: nan, rot loss: nan
+exp8obj_divangs_16 trans loss: nan, rot loss: nan
+exp8obj_divangs_17 trans loss: nan, rot loss: nan
+exp8obj_divangs_18 trans loss: 0.009247068445422441, rot loss: 0.016903948459365454

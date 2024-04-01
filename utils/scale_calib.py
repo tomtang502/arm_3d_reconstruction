@@ -42,7 +42,16 @@ def computer_arm(eef_poses_selected, w2c_poses_selected, colmap=False):
     X = eye(4)
     X[0:3, 0:3] = Rx
     X[0:3, -1] = tx.reshape(-1)
-
+    
+    d = A@X - X@B
+    t_diff = d[:, :3, -1]#.mean(axis=0)
+    R_diff = d[:, :3, :3]#.mean(axis=0)
+    print(t_diff)
+    R_L = []
+    for r in R_diff:
+        R_L.append(np.linalg.norm(r))
+    R_L = np.array(R_L)
+    t_L = np.linalg.norm(t_diff, axis=1)
     tmp_list=[]
     for i in range(len(w2c_poses_selected)):
         rob = eef_poses_selected[i]
@@ -52,7 +61,7 @@ def computer_arm(eef_poses_selected, w2c_poses_selected, colmap=False):
     tmp_tor=torch.tensor(np.array(tmp_list))
     world_pose=tmp_tor.mean(dim=0)
 
-    return world_pose, scale, J
+    return world_pose, scale, J, R_L, t_L
 
 if __name__ == "__main__":
     """
