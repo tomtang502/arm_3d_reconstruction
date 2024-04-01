@@ -3,7 +3,7 @@ from utils.motion_cam_images import generate_images
 from configs.experiments_data_config import ArmDustrExpData
 
 exp_config = ArmDustrExpData()
-exp_name = "apriltag_backonlya"
+exp_name = "9obj_hidden_divangs"
 
 pose_data = exp_config.get_obs_config(exp_name)
 web_cam_idx = 2
@@ -16,7 +16,7 @@ if not os.path.exists(saving_dir):
 
 
 generate_images(end_effector_angles=pose_data.poses, 
-                colmapimg_angs=pose_data.additional_colmap_pose,
+                colmapimg_angs=[],
                 tg_gripper_angs=pose_data.grippper_angs,
                 comap_griang=pose_data.colmap_gripper_ang,
                 experiment_name=exp_name, conti_move_idxs=pose_data.conti_move_idxs,

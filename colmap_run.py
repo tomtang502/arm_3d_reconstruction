@@ -11,19 +11,19 @@ from configs.experiments_data_config import ArmDustrExpData
 exp_config = ArmDustrExpData()
 
 # Create the parser
-parser = argparse.ArgumentParser(description='Example script that accepts a string argument.')
+# parser = argparse.ArgumentParser(description='Example script that accepts a string argument.')
 
-# Add an argument
-parser.add_argument('exp_name', type=str, help='An experiment name')
-parser.add_argument('num_imgs', type=int, help='Number of images to consider')
+# # Add an argument
+# parser.add_argument('exp_name', type=str, help='An experiment name')
+# parser.add_argument('num_imgs', type=int, help='Number of images to consider')
 
-# Execute the parse_args() method
-args = parser.parse_args()
+# # Execute the parse_args() method
+# args = parser.parse_args()
 
-# Store the argument in a variable
-exp_name = args.exp_name
-num_imgs = args.num_imgs
-writing_file = 'output/colmap_calib_loss.txt'
+# # Store the argument in a variable
+exp_name = '9obj_hidden_divangs'
+num_imgs = 16
+#writing_file = 'output/colmap_calib_loss.txt'
 
 def copy_images_to_tmp(original_folder, idxs, parent_folder, n_imgs):
     """
@@ -174,19 +174,19 @@ ptc_tor_o = ptc_tor*scale
 loss_info = f'{exp_name}_{num_imgs} trans loss: {t_L.mean()}, rot loss: {R_L.mean()}\n'
 
 print(loss_info)
-with open(writing_file, 'a') as file:
-    file.write(loss_info) 
+# with open(writing_file, 'a') as file:
+#     file.write(loss_info) 
 
 colmap_pose, colmap_ptc = transpose_poses_ptc(im_poses_tor_o.float(), ptc_tor_o.float(), T)
 
 
-# Visualize constructed ptc
-# pts_tor_n = colmap_ptc[::300]
-# cam_pos_n=colmap_pose[:,:3,3]
-# eff_poses_n=eef_nontest[:,:3,3]
-# plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
-#                          ["arm end-effector", "camera pose", "point cloud"],
-#                          [2, 2, 0.3])
+#Visualize constructed ptc
+pts_tor_n = colmap_ptc[::10]
+cam_pos_n=colmap_pose[:,:3,3]
+eff_poses_n=eef_nontest[:,:3,3]
+plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
+                         ["arm end-effector", "camera pose", "point cloud"],
+                         [2, 2, 0.3])
 
 
 tensors_to_save = {

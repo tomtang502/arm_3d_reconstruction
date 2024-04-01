@@ -16,10 +16,10 @@ rundust3r_path = 'dust3r_run.py'
 # num_imgs = str(11)
 
 exp_name_list = ['8obj_divangs',
-    '8obj_4cluster' 
+    '8obj_4cluster', 
 
     '7obj_divangs',
-    '7obj_4cluster' 
+    '7obj_4cluster', 
     
     'shelf_divangs',
     'shelf_4cluster']
