@@ -103,7 +103,7 @@ def compute_cost(scale, A, B, Rx, N):
         d[3*i:3*i+3, 0] = ta - dot(Rx, scale*tb)
 
     tx = dot(inv(dot(C.T, C)), dot(C.T, d))
-    J = np.sum(np.linalg.norm(np.dot(C, tx) - d)**2)
+    J = np.mean(np.linalg.norm(np.dot(C, tx) - d)**2)
     return(J, tx)
 
 def get_dust3r_useidx(num_eef, num_dust3r, test_idx, linear_idx):

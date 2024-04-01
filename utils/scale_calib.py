@@ -52,7 +52,7 @@ def computer_arm(eef_poses_selected, w2c_poses_selected, colmap=False):
     tmp_tor=torch.tensor(np.array(tmp_list))
     world_pose=tmp_tor.mean(dim=0)
 
-    return world_pose, scale
+    return world_pose, scale, J
 
 if __name__ == "__main__":
     """

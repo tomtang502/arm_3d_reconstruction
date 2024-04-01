@@ -58,12 +58,12 @@ def dust3r_run(exp_name, num_imgs):
 
 
     #Visualize constructed ptc
-    # pts_tor_n = dust3r_ptc[::300]
-    # cam_pos_n=dust3r_pose[:,:3,3]
-    # eff_poses_n=eef_nontest[:,:3,3]
-    # plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
-    #                         ["arm end-effector", "camera pose", "point cloud"],
-    #                         [2, 2, 0.3])
+    pts_tor_n = dust3r_ptc[::300]
+    cam_pos_n=dust3r_pose[:,:3,3]
+    eff_poses_n=eef_nontest[:,:3,3]
+    plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
+                            ["arm end-effector", "camera pose", "point cloud"],
+                            [2, 2, 0.3])
 
     tensors_to_save = {
         'poses': dust3r_pose,
@@ -83,9 +83,9 @@ def dust3r_run(exp_name, num_imgs):
 if __name__ == "__main__":
     """
     Done
-    '8obj_divangs', '8obj_4cluster', '8obj_backonly', 
-    '7obj_divangs', '7obj_4cluster', '7obj_backonly', 
-    'shelf_divangs', 'shelf_4cluster', 'shelf_backonly'
+    '8obj_divangs', '8obj_4cluster',
+    '7obj_divangs', '7obj_4cluster',
+    'shelf_divangs', 'shelf_4cluster',
     """
     exp_name_list = []
     for exp_name in exp_name_list:
@@ -97,3 +97,4 @@ if __name__ == "__main__":
                 os.remove(ptc_pth)
                 os.remove(poses_pth)
             dust3r_run(exp_name=exp_name, num_imgs=i)
+
