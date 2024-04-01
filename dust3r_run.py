@@ -66,12 +66,12 @@ def dust3r_run(exp_name, num_imgs):
 
 
     #Visualize constructed ptc
-    pts_tor_n = dust3r_ptc[::300]
-    cam_pos_n=dust3r_pose[:,:3,3]
-    eff_poses_n=eef_nontest[:,:3,3]
-    plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
-                            ["arm end-effector", "camera pose", "point cloud"],
-                            [2, 2, 0.3])
+    # pts_tor_n = dust3r_ptc[::300]
+    # cam_pos_n=dust3r_pose[:,:3,3]
+    # eff_poses_n=eef_nontest[:,:3,3]
+    # plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
+    #                         ["arm end-effector", "camera pose", "point cloud"],
+    #                         [2, 2, 0.3])
 
     tensors_to_save = {
         'poses': dust3r_pose,
