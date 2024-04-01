@@ -24,9 +24,11 @@ exp_config = ArmDustrExpData()
 
 # Store the argument in a variable
 #exp_name = args.exp_name
-exp_name = '8obj_divangs'
+
 #num_imgs = args.num_imgs
-num_imgs = 10
+# exp_name = '8obj_divangs'
+# num_imgs = 10
+writing_file = 'output/dust3r_calib_loss.txt'
 
 def dust3r_run(exp_name, num_imgs):
     
@@ -36,7 +38,7 @@ def dust3r_run(exp_name, num_imgs):
     eef_poses_all = pose_data.poses + pose_data.additional_colmap_pose
     eef_poses_tor=geomu.pose_to_transform(torch.tensor(eef_poses_all))
 
-    im_poses_tor_o, ptc_tor_o = load_pose_from_exp_name(exp_name, num_imgs)
+    im_poses_tor_o, ptc_tor_o, rgb_colors, loc_info = load_pose_from_exp_name(exp_name, num_imgs)
     eef_sc_used, dust3r_sc_used, eef_nontest, eef_nontest_idx = scale_calib_pose_process(eef_poses_tor, 
                                                                                         im_poses_tor_o, 
                                                                                         pose_data.test_pt, 
@@ -50,9 +52,15 @@ def dust3r_run(exp_name, num_imgs):
 
 
     ### Solving for scale and then do caliberation
-    T, scale = computer_arm(eef_sc_used, dust3r_sc_used)
+    T, scale, J, R_L, t_L = computer_arm(eef_sc_used, dust3r_sc_used)
     im_poses_tor_o[:,:3,3]=im_poses_tor_o[:,:3,3]*scale
     ptc_tor_o = ptc_tor_o*scale
+
+    loss_info = f'{exp_name}_{num_imgs} trans loss: {t_L.mean()}, rot loss: {R_L.mean()}\n'
+    print(loss_info)
+    with open(writing_file, 'a') as file:
+        file.write(loss_info) 
+
 
     dust3r_pose, dust3r_ptc = transpose_poses_ptc(im_poses_tor_o, ptc_tor_o, T)
 
@@ -68,9 +76,14 @@ def dust3r_run(exp_name, num_imgs):
     tensors_to_save = {
         'poses': dust3r_pose,
         'dense_pt': dust3r_ptc,
+        'colors': rgb_colors,
+        'pt_loc' : loc_info,
         'eef_poses': eef_nontest,
         'T' : T,
-        'eef_idx': eef_nontest_idx
+        'eef_idx': eef_nontest_idx,
+        'J' : torch.tensor(J),
+        'trans_L' : torch.tensor(t_L),
+        'rot_L' : torch.tensor(R_L)
     }
 
     # Saving the dictionary of tensors to a file
@@ -83,18 +96,18 @@ def dust3r_run(exp_name, num_imgs):
 if __name__ == "__main__":
     """
     Done
-    '8obj_divangs', '8obj_4cluster',
-    '7obj_divangs', '7obj_4cluster',
-    'shelf_divangs', 'shelf_4cluster',
+    
     """
-    exp_name_list = []
+    out_dir = exp_config.dustr_out_pth
+    exp_name_list = ['8obj_divangs', '8obj_4cluster',
+    '7obj_divangs', '7obj_4cluster',
+    'shelf_divangs', 'shelf_4cluster',]
     for exp_name in exp_name_list:
-        for i in range(10, 20):    
-            ptc_pth = exp_config.get_ptc_output_path(exp_name)
-            poses_pth = exp_config.get_cam_pose_path(exp_name)
-            print(ptc_pth, poses_pth)
-            if os.path.isfile(ptc_pth) and os.path.isfile(poses_pth):
-                os.remove(ptc_pth)
-                os.remove(poses_pth)
-            dust3r_run(exp_name=exp_name, num_imgs=i)
+        for i in range(10, 21):    
+            saving_loc = os.path.join(out_dir, f'{exp_name}_{i}.pth')
+            print(saving_loc)
+            if os.path.isfile(saving_loc):
+                print(saving_loc, "already processed")
+            else:
+                dust3r_run(exp_name=exp_name, num_imgs=i)
 
