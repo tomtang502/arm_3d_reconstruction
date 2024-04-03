@@ -101,13 +101,14 @@ if __name__ == "__main__":
     out_dir = exp_config.dustr_out_pth
     exp_name_list = ['8obj_divangs', '8obj_4cluster',
     '7obj_divangs', '7obj_4cluster',
-    'shelf_divangs', 'shelf_4cluster', '9obj_hidden_divangs']
+    'shelf_divangs', 'shelf_4cluster']
     for exp_name in exp_name_list:
         for i in range(10, 21):    
             saving_loc = os.path.join(out_dir, f'{exp_name}_{i}.pth')
-            print(saving_loc)
+            print("Working on", saving_loc)
             if os.path.isfile(saving_loc):
                 print(saving_loc, "already processed")
             else:
                 dust3r_run(exp_name=exp_name, num_imgs=i)
+                #load_pose_from_exp_name(exp_name, 20)
 

@@ -25,13 +25,19 @@ tensors_to_save = {
         'poses': dust3r_pose,
         'dense_pt': dust3r_ptc,
         'colors': rgb_colors,
-        'pt_loc' : loc_info,
+        'pt_loc' : loc_info, # row, col, img_idx
         'eef_poses': eef_nontest,
         'T' : T,
         'eef_idx': eef_nontest_idx,
         'J' : torch.tensor(J),
         'trans_L' : torch.tensor(t_L),
         'rot_L' : torch.tensor(R_L)
+}
+
+tinysam segmanted images
+tensors = {
+    'pix_cla': torch.tensor(pixel_map), # w*h, each location is corresponding class
+    'viz': torch.tensor(pixel_viz) # some preassigned colors
 }
 
 https://drive.google.com/drive/folders/1MXqcuhJHIx36VMiAnD2ZopHMVWjqZv0U?usp=sharing

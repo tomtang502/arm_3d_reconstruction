@@ -46,7 +46,7 @@ def computer_arm(eef_poses_selected, w2c_poses_selected, colmap=False):
     d = A@X - X@B
     t_diff = d[:, :3, -1]#.mean(axis=0)
     R_diff = d[:, :3, :3]#.mean(axis=0)
-    print(t_diff)
+    #print(t_diff)
     R_L = []
     for r in R_diff:
         R_L.append(np.linalg.norm(r))

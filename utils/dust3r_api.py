@@ -32,7 +32,7 @@ Their functionality is literally explained by their name.
 """
 
 def running_dust3r(exp_name, num_imgs, out_dir=data_config.dustr_out_pth, batch_size=4, 
-                   schedule="cosine", lr=0.01, niter=320, device="cuda", model_path=std_model_pth):
+                   schedule="cosine", lr=0.01, niter=380, device="cuda", model_path=std_model_pth):
     model = load_model(model_path, device)
     file_paths = data_config.get_images_paths(exp_name, num_imgs=num_imgs)
     images = load_images(file_paths, size=img_size)
