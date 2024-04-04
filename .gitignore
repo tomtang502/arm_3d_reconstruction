@@ -4,3 +4,4 @@ z1_controller
 output/colmap_saved_output/*
 output/dust3r_saved_output/*
 output/tiny_sam_output/*
+output/dust3r_segmented_output/*
