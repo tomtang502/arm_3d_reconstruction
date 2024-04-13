@@ -1,13 +1,9 @@
 import os, torch
 import numpy as np
 import matplotlib.pyplot as plt
-from mayavi import mlab
 from configs.experiments_data_config import ArmDustrExpData
 from tqdm import tqdm
 exp_config = ArmDustrExpData()
-
-
-
 
 
 def seg_experiment(exp_name, num_imgs, seg_file_suffix='.pth'):
@@ -37,7 +33,7 @@ def seg_experiment(exp_name, num_imgs, seg_file_suffix='.pth'):
         #plt.show()
     #seg_f_L = [seg_files[i] for i in range(len(seg_mat_L)) if i not in pose_data.test_pt]
     seg_mat_L = [seg_mat_L[i] for i in range(len(seg_mat_L)) if i not in pose_data.test_pt]
-    print(len(seg_mat_L))
+    #print(len(seg_mat_L))
 
 
     # ---------------------------- #
@@ -54,9 +50,6 @@ def seg_experiment(exp_name, num_imgs, seg_file_suffix='.pth'):
         row, col, img_idx = pts_loc[i]
         pts_class[i] = seg_mat_L[img_idx][row, col]
 
-    # -------- #
-    # Plotting #
-    # -------- #
     print(np.sum(pts_class), pts_class.shape, "should be from", pts.shape)
 
     tensors_to_save = {
@@ -77,24 +70,16 @@ def seg_experiment(exp_name, num_imgs, seg_file_suffix='.pth'):
     print("-"*10)
     print(f"dust3r out saved at {saving_path}")
     print("-"*10)
-    
-def viz_seg_pts(pts, pts_class):
-    fig = mlab.figure()
-    for c in np.unique(pts_class):
-        ix = np.where(pts_class == c)
-        color = tuple(list(np.random.rand(3)))
-        mlab.points3d(pts[ix, 0], pts[ix, 1], pts[ix, 2], color=color, 
-                      scale_factor=0.05, scale_mode='none', mode='point')
-    mlab.show()
 
 if __name__ == "__main__":
-    exp_name_list = ['8obj_divangs', '8obj_4cluster',
+    """
+    Experiment names:
+    '8obj_divangs', '8obj_4cluster',
     '7obj_divangs', '7obj_4cluster',
-    'shelf_divangs', 'shelf_4cluster']
+    'shelf_divangs', 'shelf_4cluster'
+    """
+    exp_name_list = ['5obj_measure']
     for exp_name in exp_name_list:
-        for i in range(10, 21): 
+        for i in range(6, 13, 2): 
             seg_experiment(exp_name, i)
-    # for visualize
-    # saving_path = os.path.join("output/dust3r_segmented_output", f'{exp_name}_{num_imgs}.pth')
-    # meta = torch.load(saving_path)
-    # viz_seg_pts(meta['dense_pt'], meta['pt_class'])
+    

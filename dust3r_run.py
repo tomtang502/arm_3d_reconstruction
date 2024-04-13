@@ -53,6 +53,7 @@ def dust3r_run(exp_name, num_imgs):
 
     ### Solving for scale and then do caliberation
     T, scale, J, R_L, t_L = computer_arm(eef_sc_used, dust3r_sc_used)
+    print(scale)
     im_poses_tor_o[:,:3,3]=im_poses_tor_o[:,:3,3]*scale
     ptc_tor_o = ptc_tor_o*scale
 
@@ -63,15 +64,18 @@ def dust3r_run(exp_name, num_imgs):
 
 
     dust3r_pose, dust3r_ptc = transpose_poses_ptc(im_poses_tor_o, ptc_tor_o, T)
+    print(dust3r_pose.shape, "here")
+    print(dust3r_pose)
 
 
     #Visualize constructed ptc
-    # pts_tor_n = dust3r_ptc[::300]
-    # cam_pos_n=dust3r_pose[:,:3,3]
-    # eff_poses_n=eef_nontest[:,:3,3]
-    # plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
-    #                         ["arm end-effector", "camera pose", "point cloud"],
-    #                         [2, 2, 0.3])
+    pts_tor_n = dust3r_ptc[::300]
+    cam_pos_n=dust3r_pose[:,:3,3]
+    print(cam_pos_n)
+    eff_poses_n=eef_nontest[:,:3,3]
+    plotty_graph_multistruct([eff_poses_n, cam_pos_n, pts_tor_n], 
+                            ["arm end-effector", "camera pose", "point cloud"],
+                            [2, 2, 0.3])
 
     tensors_to_save = {
         'poses': dust3r_pose,
@@ -96,14 +100,15 @@ def dust3r_run(exp_name, num_imgs):
 if __name__ == "__main__":
     """
     Done
+    '8obj_divangs', '8obj_4cluster',
+    '7obj_divangs', '7obj_4cluster',
+    'shelf_divangs', 'shelf_4cluster'
     
     """
     out_dir = exp_config.dustr_out_pth
-    exp_name_list = ['8obj_divangs', '8obj_4cluster',
-    '7obj_divangs', '7obj_4cluster',
-    'shelf_divangs', 'shelf_4cluster']
+    exp_name_list = ['5obj_measure']
     for exp_name in exp_name_list:
-        for i in range(10, 21):    
+        for i in range(6, 13, 2):    
             saving_loc = os.path.join(out_dir, f'{exp_name}_{i}.pth')
             print("Working on", saving_loc)
             if os.path.isfile(saving_loc):

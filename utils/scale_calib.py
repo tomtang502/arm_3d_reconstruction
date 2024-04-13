@@ -15,9 +15,9 @@ def computer_arm(eef_poses_selected, w2c_poses_selected, colmap=False):
     
     w2c_poses_selected_scale_cpy = w2c_poses_selected.clone()
     if colmap:
-        vals_sc=np.linspace(0.001,0.5,20000).reshape(-1)
+        vals_sc=np.linspace(0.01, 5, 200000).reshape(-1)
     else:
-        vals_sc=np.linspace(1,4,20000).reshape(-1)
+        vals_sc=np.linspace(0.01, 10, 200000).reshape(-1)
     A, B, Rx, N=compute_A_B_Rx(eef_poses_selected,w2c_poses_selected_scale_cpy)
 
 

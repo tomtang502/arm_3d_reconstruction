@@ -50,7 +50,8 @@ class ArmDustrExpData():
             'apriltag_4clustera': 'shelf_4cl_sa',
             'apriltag_backonlya': 'backonly_ori_sa',
 
-            '9obj_hidden_divangs' : 'diverse_ori_sa'
+            '9obj_hidden_divangs' : 'diverse_ori_sa',
+            '5obj_measure' : 'scale_exp'
         }
 
         self.expnames = self.exp_name2configname.keys()
