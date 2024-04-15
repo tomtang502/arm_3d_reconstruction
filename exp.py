@@ -1,26 +1,14 @@
-import numpy as np
-import pyvista as pv
+from PIL import Image
 
-# Generate some synthetic point cloud data
-num_points = 1000
-points = np.random.rand(num_points, 3) * 100  # Random points within a 100x100x100 cube
-point_cloud = pv.PolyData(points)
-point_cloud['scalars'] = np.random.rand(num_points)  # Just some random scalars for coloring
+def crop_center(image, target_width=512, target_height=384):
+    width, height = image.size
+    
+    left = (width - target_width) // 2
+    top = (height - target_height) // 2
+    
+    cropped_image = image.crop((left, top, left+target_width, top+target_height))
+    return cropped_image
 
-def pick_callback(picker):
-    point_id = picker#.point_id
-    print(point_id.shape)
-    if True: #point_id != -1:  # Check if a valid point was picked
-        picked_point = point_id#points[point_id]
-        print(f"Picked point ID: {point_id}, Coordinates: {picked_point}")
-
-# Create a plotter and add the point cloud
-plotter = pv.Plotter()
-plotter.add_points(point_cloud, scalars='scalars', color=True, point_size=5)
-
-# Enable point picking
-plotter.enable_point_picking(pick_callback, show_message=True)
-plotter.show_grid(color='black')
-
-# Display the plotter window
-plotter.show()
+# Usage
+cropped_img = crop_center(Image.open('arm_captured_images/3obj_measure/3obj_measure_j.jpg').convert('RGB'))  # Replace with the path to your image file
+cropped_img.show()

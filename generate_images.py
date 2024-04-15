@@ -3,7 +3,7 @@ from utils.motion_cam_images import generate_images
 from configs.experiments_data_config import ArmDustrExpData
 
 exp_config = ArmDustrExpData()
-exp_name = "5obj_measure"
+exp_name = "4obj_measure"
 
 pose_data = exp_config.get_obs_config(exp_name)
 web_cam_idx = 2

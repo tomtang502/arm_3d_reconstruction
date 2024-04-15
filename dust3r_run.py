@@ -106,7 +106,7 @@ if __name__ == "__main__":
     
     """
     out_dir = exp_config.dustr_out_pth
-    exp_name_list = ['shelf_divangs']
+    exp_name_list = ['4obj_measure']
     for exp_name in exp_name_list:
         for i in range(6, 13, 2):    
             saving_loc = os.path.join(out_dir, f'{exp_name}_{i}.pth')
