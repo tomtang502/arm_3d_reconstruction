@@ -27,7 +27,7 @@ This repository includes a module licensed under the Creative Commons Attributio
 
 Module: Dust3r
 
-Original Author: Shuzhe Wang, Vincent Leroy, Yohann Cabon, Boris Chidlovskii, Jérôme Revaud
+Original Authors: Shuzhe Wang, Vincent Leroy, Yohann Cabon, Boris Chidlovskii, Jérôme Revaud
 
 Source: https://github.com/naver/dust3r
 
