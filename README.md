@@ -21,6 +21,17 @@ Some usage code here
 
 We thank _, _, and _, for blah blah.
 
+## Attribution
+
+This repository includes a module licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+
+Module: Dust3r
+Original Author: Shuzhe Wang, Vincent Leroy, Yohann Cabon, Boris Chidlovskii, Jérôme Revaud
+Source: https://github.com/naver/dust3r
+
+License: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+
 ## License
 
-[Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
+[CC BY-NC-SA 4.0]([https://choosealicense.com/licenses/apache-2.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.en))
