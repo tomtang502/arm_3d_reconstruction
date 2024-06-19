@@ -1,22 +1,26 @@
-Teaching arm path planning project led by Will @ DROP Lab.
+# Joint Calibration and Representation (JCR) 
+
+This is the official implementation of the paper [Unifying Scene Representation and Hand-Eye Calibration with 3D Foundation Models](https://pip.pypa.io/en/stable/).
+
+## Installation
+
+It's recommended to use a package manager like [conda](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html) to create a package environment to install and manage required dependencies.
 
 
+```bash
+pip install foobar
+```
 
-def (ptc, image, pixel_class)
-pt_i
-[x, y, z]
-a bunch of image pose (c2w)
-K inv(c2w) [x, y, z, 1]
-[x_, y_, z_]
-[x_/z_, y_/z_] (680, 340) reject if outside range
-pt_i (pix_1 (2), pix_2 (1), pix_3 (1).. (20))
-for each pixel (cup) [pt_0 cup, pt_28 box, pt_90 table]
-    
+## Usage
 
+```python
+Some usage code here
+```
 
-pt_i (0: 2, 1:1, 2:0, 3:0) => 0
+## Acknowledgment
 
-pt_i: class j
-4 test images
-for each pt_i map back to test images:
-    compare class of pti with its corresponding mapped pixel
+We thank _, _, and _, for blah blah.
+
+## License
+
+[Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
