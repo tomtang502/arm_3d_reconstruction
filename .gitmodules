@@ -1,0 +1,9 @@
+[submodule "croco"]
+	path = dust3r/croco
+	url = https://github.com/naver/croco
+[submodule "z1_controller"]
+	path = z1_controller
+	url = https://github.com/unitreerobotics/z1_controller.git
+[submodule "z1_sdk"]
+	path = z1_sdk
+	url = https://github.com/unitreerobotics/z1_sdk.git

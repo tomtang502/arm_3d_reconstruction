@@ -1,0 +1,17 @@
+torch
+torchvision
+roma
+gradio
+matplotlib
+tqdm
+opencv-python
+scipy
+einops
+trimesh
+numpy
+open3d
+pyvista
+tensorboard
+pyglet<2
+gdown
+pillow-heif  # heic image support

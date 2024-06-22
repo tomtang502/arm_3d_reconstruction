@@ -18,41 +18,24 @@ class ArmDustrExpData():
         # Key: Name of each experiment -> Val: the corresponding experiment observation angles 
         # config when adding experiment, first add configuration in obs
         self.exp_name2configname = {
-            '4bs2sslb3_sa': '4back3sym_2sidesym_leftback3linearx_sa', # (12+2 images)
-            '4bs2sslb3_sa_apriltag': '4back3sym_2sidesym_leftback3linearx_sa', # same angle with apriltag
-            '2bs2sslb3_sa': '2backsym_2sidesym_leftback3linearx_sa', #(8+2 images for < 10GB GPU)
-            '2bs2sslb3_sa_apriltag': '2backsym_2sidesym_leftback3linearx_sa',
-
-            # For comparison with colmap (14 + 2 images)
-            '2obj_divangs' : 'diverse_ori_sa',
-            '2obj_4cluster': 'fourcluster_ori_sa', 
-            '2obj_backonly': 'backonly_ori_sa',
-
+           
+            # Light table
             '8obj_divangs' : 'diverse_ori_sa',
             '8obj_4cluster': 'fourcluster_ori_sa', 
-            '8obj_backonly': 'backonly_ori_sa', 
 
             '7obj_divangs' : 'diverse_ori_sa',
-            '7obj_4cluster': 'fourcluster_ori_sa', 
-            '7obj_backonly': 'backonly_ori_sa', 
+            '7obj_4cluster': 'fourcluster_ori_sa',
             
-            # center of april tag about 0.15 m from base center
-            'apriltag_divangs' : 'diverse_ori_sa',
-            'apriltag_4cluster': 'fourcluster_ori_sa',
-            'apriltag_backonly': 'backonly_ori_sa',
-            
+            # Dark Table            
             'shelf_divangs' : 'shelf_div_sa',
             'shelf_4cluster': 'shelf_4cl_sa',
-            'shelf_backonly': 'backonly_ori_sa',
 
+            # Measurements
+            '4obj_measure' : 'scale_exp',
 
-            'apriltag_divangsa' : 'shelf_div_sa',
-            'apriltag_4clustera': 'shelf_4cl_sa',
-            'apriltag_backonlya': 'backonly_ori_sa',
-
+            # More fun experiments
             '9obj_hidden_divangs' : 'diverse_ori_sa',
-            '5obj_measure' : 'scale_exp',
-            '4obj_measure' : 'scale_exp'
+            
         }
 
         self.expnames = self.exp_name2configname.keys()
@@ -61,7 +44,6 @@ class ArmDustrExpData():
 
     def init_out_dir(self):
         self.dustr_out_pth = os.path.join(project_folder, "output/dust3r_saved_output")
-        self.depth_out_pth = os.path.join(project_folder, "output/dc_saved_output")
         self.colmap_out_pth = os.path.join(project_folder, "output/colmap_saved_output")
 
     # Return the experiment angle configuration object, see configs/observation_poses_config.py
