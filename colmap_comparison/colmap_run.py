@@ -1,8 +1,11 @@
-import pycolmap, torch
-import pathlib, os#, torch
+import pycolmap, torch, pathlib, os, sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
 import numpy as np
 import open3d as o3d
-import shutil, argparse
+import shutil
 import utils.geometric_util as geomu
 from utils.graph_util import graph_single_struct, graph_double_struct, plotty_graph_multistruct
 from utils.scale_calib import *
@@ -10,19 +13,9 @@ from utils.fix_scale_calib import transpose_poses_ptc
 from configs.experiments_data_config import ArmDustrExpData
 exp_config = ArmDustrExpData()
 
-# Create the parser
-# parser = argparse.ArgumentParser(description='Example script that accepts a string argument.')
 
-# # Add an argument
-# parser.add_argument('exp_name', type=str, help='An experiment name')
-# parser.add_argument('num_imgs', type=int, help='Number of images to consider')
-
-# # Execute the parse_args() method
-# args = parser.parse_args()
-
-# # Store the argument in a variable
-exp_name = '9obj_hidden_divangs'
-num_imgs = 16
+exp_name = '8obj_divangs'
+num_imgs = 10
 #writing_file = 'output/colmap_calib_loss.txt'
 
 def copy_images_to_tmp(original_folder, idxs, parent_folder, n_imgs):
@@ -164,7 +157,7 @@ assert eef_nontest.shape == im_poses_tor_o.shape, "Number of eef != Number of ca
 
 
 ### Solving for scale and then do caliberation
-T, scale, J, R_L, t_L  = computer_arm(eef_sc_used, colmap_sc_used, colmap=True)
+T, scale, J, R_L, t_L  = compute_arm(eef_sc_used, colmap_sc_used, colmap=True)
 im_poses_tor_o[:,:3,3]=im_poses_tor_o[:,:3,3]*scale
 ptc_tor_o = ptc_tor*scale
 

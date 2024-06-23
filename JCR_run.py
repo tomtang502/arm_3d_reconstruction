@@ -1,8 +1,6 @@
-import sys, os, pickle, torch, argparse
-import utils.chessboard as chessboard
-
+import os, torch
 import utils.geometric_util as geomu
-from utils.graph_util import plotty_graph_multistruct, graph_double_struct
+from utils.graph_util import plotty_graph_multistruct
 from utils.dust3r_api import load_pose_from_exp_name
 from utils.fix_scale_calib import *
 from utils.scale_calib import *
@@ -10,24 +8,7 @@ from utils.scale_calib import *
 import numpy as np
 from configs.experiments_data_config import ArmDustrExpData
 
-
 exp_config = ArmDustrExpData()
-# # Create the parser
-# parser = argparse.ArgumentParser(description='Example script that accepts a string argument.')
-
-# # Add an argument
-# parser.add_argument('exp_name', type=str, help='An experiment name')
-# parser.add_argument('num_imgs', type=int, help='Number of images to consider')
-
-# # Execute the parse_args() method
-# args = parser.parse_args()
-
-# Store the argument in a variable
-#exp_name = args.exp_name
-
-#num_imgs = args.num_imgs
-# exp_name = '8obj_divangs'
-# num_imgs = 10
 writing_file = 'output/dust3r_calib_loss.txt'
 
 def jcr_run(exp_name, num_imgs, save_dir):
@@ -44,11 +25,7 @@ def jcr_run(exp_name, num_imgs, save_dir):
                                                                                         pose_data.test_pt, 
                                                                                         pose_data.linearidx)
 
-    # xyz = np.stack(geomu.tmatw2c_to_xyz(im_poses_tor_o))
-    # xyz_eef = np.stack(geomu.tmatw2c_to_xyz(eef_nontest))
-    #graph_double_struct(xyz, xyz_eef)
     assert eef_nontest.shape == im_poses_tor_o.shape, "Number of eef != Number of cam poses!"
-
 
     ### Solving for scale and then do caliberation
     T, scale, J, R_L, t_L = compute_arm(eef_sc_used, dust3r_sc_used)
@@ -105,7 +82,7 @@ if __name__ == "__main__":
         os.makedirs(out_dir)
     exp_name_list = ['4obj_measure']
     for exp_name in exp_name_list:
-        for i in range(8, 13, 2):    
+        for i in range(8, 11, 2):    
             saving_loc = os.path.join(out_dir, f'{exp_name}_{i}.pth')
             print("Working on", saving_loc)
             if os.path.isfile(saving_loc):

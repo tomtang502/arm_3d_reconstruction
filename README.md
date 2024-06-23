@@ -35,10 +35,15 @@ python JCR_run.py
 [Optional] For segmentation and visualization
 The directory [tiny_sam](tiny_sam) contains scripts that requires installation of [TinySam](https://github.com/xinghaochen/TinySAM.git) to segment the input images.
 
-Then, those segmentation masks of the input images (for details look into the script at [tiny_sam_seg.py](tiny_sam/tiny_sam_seg.py)), which can then be used to conduct segmented point cloud via [JCR_pt_seg.py](JCR_pt_seg.py).
+Then, those segmentation masks of the input images (for details look into the script at [tiny_sam_seg.py](tiny_sam/tiny_sam_seg.py)), which can then be used to conduct segmented point cloud via [JCR_pt_seg.py](JCR_pt_seg.py). The result can be used by [precision_measurement.py](precision_measurement.py) to visualize and interact with the scene captured by images of this result.
 
 [Optional] Set up z1 arm for images taking and operations
-The Unitree Z1 Robotics Arm was used for experiments, which comes with z1_controller, z1_ros, and z1_sdk (only z1_controller and z1_sdk are used for taking images and operations). Following their [official documentation](https://dev-z1.unitree.com/) to set up z1 arm for experiments.
+The Unitree Z1 Robotics Arm was used for experiments, which comes with z1_controller, z1_ros, and z1_sdk (only z1_controller and z1_sdk are used for taking images and operations). Following their [official documentation](https://dev-z1.unitree.com/) to set up z1 arm for experiments, and [generate_images.py](generate_images.py) can be used to take images via z1 arm and a camera mouted on top of it.
+
+[MISC]
+[ray_diffusion_comparison](ray_diffusion_comparison) contains code we used to compare with Ray Diffusion, which requires installing [Ray Diffusion](https://github.com/jasonyzhang/RayDiffusion.git) following their official instruction.
+
+[colmap_comparison](colmap_comparison) contains code we used to compare with Colmap, which requires build pycolmap from source, and the instruction can be found [here](https://colmap.github.io/).
 
 ## Acknowledgment
 
