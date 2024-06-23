@@ -11,7 +11,7 @@ project_folder = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(project_folder)
 from utils.scale_calib_helper import *
 
-def computer_arm(eef_poses_selected, w2c_poses_selected, colmap=False):
+def compute_arm(eef_poses_selected, w2c_poses_selected, colmap=False):
     
     w2c_poses_selected_scale_cpy = w2c_poses_selected.clone()
     if colmap:

@@ -126,5 +126,5 @@ if __name__ == "__main__":
             }
             torch.save(tensors, out_path)
             i += 1
-        print(f"Done with directory {dir}, drag it to finished_output to save progress!")
+        print(f"Done with directory {dir}, drag it to output/tiny_sam_output to save progress!")
 

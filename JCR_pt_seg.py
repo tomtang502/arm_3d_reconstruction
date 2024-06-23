@@ -78,7 +78,7 @@ if __name__ == "__main__":
     '7obj_divangs', '7obj_4cluster',
     'shelf_divangs', 'shelf_4cluster'
     """
-    exp_name_list = ['5obj_measure']
+    exp_name_list = ['4obj_measure']
     for exp_name in exp_name_list:
         for i in range(6, 13, 2): 
             seg_experiment(exp_name, i)

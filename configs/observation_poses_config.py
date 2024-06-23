@@ -206,8 +206,8 @@ class ExperimentConfigs():
             [-2.71813, -0.86767, -0.69623, -0.06844, 0.09014, 0.69038], #right back 2
             [-2.51890, -0.54126, -0.08807, -0.00074, -0.49342, 0.42817], # right back corner
             [-2.76276, -0.63924, -0.79016, -0.00504,  0.01017,  0.64309], # left back 0
-            [-3.008, -0.5914, -0.633, -0.111, 0.2634, 0.485], # left back 1
-            [-3.008, -0.5914, -0.633, -0.061, 0.2634, 0.485], # left back 1 x + 5cm
+            # [-3.008, -0.5914, -0.633, -0.111, 0.2634, 0.485], # left back 1
+            # [-3.008, -0.5914, -0.633, -0.061, 0.2634, 0.485], # left back 1 x + 5cm
             [-3.008, -0.5914, -0.633, -0.011, 0.2634, 0.485], # left back 1 x + 10cm
             [-2.71813, -0.86767, -0.69623, -0.06844, 0.09014, 0.69038], # left back 2
             [2.39645, -0.54843, 0.08445, -0.00101, 0.49278, 0.42958], # left back corner
@@ -224,7 +224,7 @@ class ExperimentConfigs():
         # Gripper angle in radians
         tg_gripper_angs = [-np.pi/2 + 0.001] * len(top_cam_cposes)
         conti_move_idxs = [0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 13, 14]
-        linear_idx = [5, 6]
+        linear_idx = []#[5, 6, 7]
         test_pt = [0, 4, 12, 15]
         self.add_experiment(experiment_name=experiment_name, poses=top_cam_cposes, 
                             gripper_angs=tg_gripper_angs, linear_idx=linear_idx, 

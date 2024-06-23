@@ -6,7 +6,6 @@ exp_name = '4obj_measure'
 num_imgs = 12
 saving_path = os.path.join("output/dust3r_segmented_output", f'{exp_name}_{num_imgs}.pth')
 meta = torch.load(saving_path)
-print(meta['dense_pt'].shape, meta['colors'].shape)
 # Example data generation
 points = meta['dense_pt'].numpy()  # Random points in a 100x100x100 cube
 colors = meta['colors']  # Random colors

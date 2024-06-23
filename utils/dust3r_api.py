@@ -40,25 +40,20 @@ def running_dust3r(exp_name, num_imgs, out_dir=data_config.dustr_out_pth, batch_
     output = inference(pairs, model, device, batch_size=batch_size)
     scene = global_aligner(output, device=device, mode=GlobalAlignerMode.PointCloudOptimizer)
 
-    loss = scene.compute_global_alignment(init="mst", niter=niter, schedule=schedule, lr=lr)
-    print(f"Status: dust3r finished running with a loss of {loss}")
+    _ = scene.compute_global_alignment(init="mst", niter=niter, schedule=schedule, lr=lr)
 
     imgs = scene.imgs
     focals = scene.get_focals()
     poses = scene.get_im_poses()
     pts3d = scene.get_pts3d()
-    print(type(pts3d), len(pts3d), type(pts3d[0]), pts3d[0].shape)
     confidence_masks = scene.get_masks()
-    print(type(confidence_masks), len(confidence_masks), type(confidence_masks[0]), confidence_masks[0].shape)
     pts_list=[]
 
     pts3d_np = to_numpy(pts3d)
     masks_np = to_numpy(confidence_masks)
-    print(scene.imgs[0].shape)
     pts = np.concatenate([p[m] for p, m in zip(pts3d_np, masks_np)])
     
     rgb_colors = np.concatenate([p[m] for p, m in zip(imgs, masks_np)])
-    print(pts.shape, rgb_colors.shape)
 
     pt_loc = []
     h, w, _ = pts3d_np[0].shape
@@ -76,7 +71,6 @@ def running_dust3r(exp_name, num_imgs, out_dir=data_config.dustr_out_pth, batch_
     imgs_tor = torch.tensor(np.array(scene.imgs)).detach().cpu()
     masks_tor = torch.tensor(np.array(masks_np))
     pt_loc_tor = torch.tensor(np.concatenate(pt_loc))
-    print(pt_loc_tor.shape)
     pts_tor=torch.cat(pts_list).detach().cpu()
     poses = poses.detach().cpu()  
 

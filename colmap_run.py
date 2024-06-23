@@ -140,7 +140,6 @@ ply_path = os.path.join(exp_config.get_ptc_output_path(exp_name, exp_type=1), "d
 point_cloud = o3d.io.read_point_cloud(ply_path)
 ptc_xyz = np.asarray(point_cloud.points)
 # o3d.visualization.draw_geometries([point_cloud])
-print(f"dense shape: {ptc_xyz.shape}")
 if point_cloud.colors:
     # Extract color information
     ptc_colors = np.asarray(point_cloud.colors)
@@ -161,7 +160,6 @@ eef_sc_used, colmap_sc_used, eef_nontest = scale_calib_pose_process_col(eef_pose
 xyz = np.stack(geomu.tmatw2c_to_xyz(im_poses_tor_o))
 xyz_eef = np.stack(geomu.tmatw2c_to_xyz(eef_nontest))
 #graph_double_struct(xyz_eef, xyz)
-print(eef_nontest.shape, "should be same as", im_poses_tor_o.shape)
 assert eef_nontest.shape == im_poses_tor_o.shape, "Number of eef != Number of cam poses!"
 
 

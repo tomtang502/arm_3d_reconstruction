@@ -16,15 +16,26 @@ conda create -n jcr python=3.11 cmake=3.14.0
 conda activate jcr
 conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia
 
-sudo chmod +x installation.sh
+# The following commands also download some experiment images we have taken via robotic arm.
+sudo chmod +x installation.sh 
 ./installation.sh
 ```
 
 ## Usage
 
-```python
-Some usage code here
+To download some sample experiments data we've processed by dust3r and colmap (some of them are processed by tiny-sam for segmentation visualization).
+```bash
+sudo chmod +x download_data.sh
+./download_data.sh
 ```
+[JCR_run.py](JCR_run.py) walk through how to use the JCR method which take in images, and output caliberated poses and point cloud.
+```bash
+python JCR_run.py
+```
+[Optional] For segmentation and visualization
+The directory [tiny_sam](tiny_sam) contains scripts that requires installation of [TinySam](https://github.com/xinghaochen/TinySAM.git) to segment the input images.
+
+Then, those segmentation masks of the input images (for details look into the script at [tiny_sam_seg.py](tiny_sam/tiny_sam_seg.py)), which can then be used to conduct segmented point cloud via [JCR_pt_seg.py](JCR_pt_seg.py).
 
 [Optional] Set up z1 arm for images taking and operations
 The Unitree Z1 Robotics Arm was used for experiments, which comes with z1_controller, z1_ros, and z1_sdk (only z1_controller and z1_sdk are used for taking images and operations). Following their [official documentation](https://dev-z1.unitree.com/) to set up z1 arm for experiments.
