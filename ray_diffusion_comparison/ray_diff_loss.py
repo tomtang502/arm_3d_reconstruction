@@ -15,13 +15,13 @@ from configs.experiments_data_config import ArmDustrExpData
 
 rdiff_res = torch.load("rdiff_output.pt")
 
-writing_file = '../output/raydiff_calib_loss.txt'
+writing_file = '../output/raydiff_calib_loss_test.txt'
 exp_names = [
         '8obj_divangs',
         '7obj_divangs',
         'shelf_divangs'
 ]
-num_img_options = [8, 10, 12, 15]
+num_img_options = [10, 12, 15]
 exp_config = ArmDustrExpData()
 
 for exp_name in exp_names:
@@ -32,15 +32,14 @@ for exp_name in exp_names:
         eef_poses_tor=geomu.pose_to_transform(torch.tensor(eef_poses_all))
 
         im_poses_tor_o = rdiff_res[f"{exp_name}_{num_imgs}"]
-        eef_sc_used, dust3r_sc_used, eef_nontest, eef_nontest_idx = scale_calib_pose_process(eef_poses_tor, 
-                                                                                            im_poses_tor_o, 
-                                                                                            pose_data.test_pt, 
-                                                                                            pose_data.linearidx)
+        eef_sc_used, rdiff_sc_used, _, _ = scale_calib_pose_process(eef_poses_tor, 
+                                                                    im_poses_tor_o, 
+                                                                    pose_data.test_pt, 
+                                                                    pose_data.linearidx)
 
-        assert eef_nontest.shape == im_poses_tor_o.shape, "Number of eef != Number of cam poses!"
-
+        assert eef_sc_used.shape == rdiff_sc_used.shape, "Number of eef != Number of cam poses!"
         ### Solving for scale and then do caliberation
-        T, scale, J, R_L, t_L = compute_arm(eef_sc_used, dust3r_sc_used)
+        T, scale, J, R_L, t_L = compute_arm(eef_sc_used, rdiff_sc_used)
         im_poses_tor_o[:,:3,3]=im_poses_tor_o[:,:3,3]*scale
 
         loss_info = f'{exp_name}_{num_imgs} trans loss: {t_L.mean()}, rot loss: {R_L.mean()}\n'

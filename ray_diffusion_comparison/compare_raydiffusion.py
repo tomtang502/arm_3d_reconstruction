@@ -92,7 +92,7 @@ if __name__ == "__main__":
         img_dir = f"arm_captured_images/{exp_name}"
         image_files = sorted(os.listdir(img_dir))
         image_files_used = [image_files[i] for i in range(len(image_files)) if i not in unused_points]
-        for num_img in [8, 10, 12, 15]:
+        for num_img in [12, 15]:
             with tempfile.TemporaryDirectory() as temp_dir:
                 for file in image_files_used[:num_img]:
                     # Ensure the file exists before copying

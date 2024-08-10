@@ -1,7 +1,8 @@
 #!/bin/bash
 echo "Install dependencies"
 pip install -r requirements.txt --default-timeout=100
-
+mkdir output
+mkdir -p dust3r/checkpoints
 echo "Loading checkpoint for dust3r"
 # download dust3r checkpoint
 FILE_ID="1vka5WSNVJN3Apybxha7jd0YZYeVZDmnR"
