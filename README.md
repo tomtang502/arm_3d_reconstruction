@@ -1,7 +1,7 @@
 # Joint Calibration and Representation (JCR) 
 
 This  repository is the official implementation of the paper [Unifying Scene Representation and Hand-Eye Calibration with 3D Foundation Models](https://pip.pypa.io/en/stable/). It contains a set of experiments we ran along with the implementation of method itself (JCR.py). 
-
+![Method Demonstration](/configs/fig1.png)
 
 ## Installation
 
