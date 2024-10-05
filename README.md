@@ -1,3 +1,13 @@
+# Paper Citation
+```bash
+@ARTICLE{zhiJCR_2024,
+  author={Zhi, Weiming and Tang, Haozhan and Zhang, Tianyi and Johnson-Roberson, Matthew},
+  journal={IEEE Robotics and Automation Letters}, 
+  title={Unifying Representation and Calibration With 3D Foundation Models}, 
+  year={2024},
+}
+```
+
 # Joint Calibration and Representation (JCR) 
 
 This  repository is the official implementation of the paper [Unifying Scene Representation and Hand-Eye Calibration with 3D Foundation Models](https://arxiv.org/abs/2404.11683). It contains a set of experiments we ran along with the implementation of method itself (JCR.py). 
