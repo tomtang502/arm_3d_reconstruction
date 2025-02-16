@@ -24,7 +24,8 @@ cd arm_3d_reconstruction
 
 conda create -n jcr python=3.11 cmake=3.14.0
 conda activate jcr
-conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia
+# change to the your cuda-toolkit version, and I think pytorch version can be flexible (especially if you need compatibility with other module envs).
+conda install pytorch==2.2.1 torchvision==0.17.1 torchaudio==2.2.1 pytorch-cuda=12.1 -c pytorch -c nvidia
 
 # The following commands also download some experiment images we have taken via robotic arm.
 sudo chmod +x installation.sh 
