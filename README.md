@@ -19,7 +19,7 @@ It's recommended to use a package manager like [conda](https://conda.io/projects
 
 If unzip is not installed via apt, use apt to install unzip before proceed.
 ```bash
-git clone -recursive https://github.com/tomtang502/arm_3d_reconstruction.git
+git clone --recursive https://github.com/tomtang502/arm_3d_reconstruction.git
 cd arm_3d_reconstruction
 
 conda create -n jcr python=3.11 cmake=3.14.0
