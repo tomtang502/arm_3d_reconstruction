@@ -5,7 +5,7 @@
 # utilities needed for the inference
 # --------------------------------------------------------
 import tqdm
-import torch
+import torch, sys, os
 from dust3r.utils.device import to_cpu, collate_with_cat
 from dust3r.model import AsymmetricCroCo3DStereo, inf  # noqa: F401, needed when loading the model
 from dust3r.utils.misc import invalid_to_nans

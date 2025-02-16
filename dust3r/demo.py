@@ -79,22 +79,17 @@ def _convert_scene_output_to_glb(outdir, imgs, pts3d, mask, focals, cams2world, 
                       None if transparent_cams else imgs[i], focals[i],
                       imsize=imgs[i].shape[1::-1], screen_width=cam_size)
 
-    # modification here
-    outdir = "/home/tomtang/RI/arm/teaching_arm_z1/output/dust3r_saved_output"
-    outfile = os.path.join(outdir, 'scene.glb')
-    print('(exporting 3D scene to', outfile, ')')
-    scene.export(file_obj=outfile)
     rot = np.eye(4)
     rot[:3, :3] = Rotation.from_euler('y', np.deg2rad(180)).as_matrix()
     scene.apply_transform(np.linalg.inv(cams2world[0] @ OPENGL @ rot))
     outfile = os.path.join(outdir, 'scene.glb')
     print('(exporting 3D scene to', outfile, ')')
-    #scene.export(file_obj=outfile)
+    scene.export(file_obj=outfile)
     return outfile
 
 
-def get_3D_model_from_scene(outdir, scene, min_conf_thr=3, as_pointcloud=False, mask_sky=False,
-                            clean_depth=False, transparent_cams=False, cam_size=0.05):
+def get_3D_model_from_scene(outdir, scene, min_conf_thr=3, as_pointcloud=True, mask_sky=False,
+                            clean_depth=False, transparent_cams=True, cam_size=0.05):
     """
     extract 3D_model (glb file) from a reconstructed scene
     """

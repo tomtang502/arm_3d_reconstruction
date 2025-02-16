@@ -4,3 +4,4 @@ unused_code/*
 utils/__pycache__/*
 configs/__pycache__/*
 __pycache__/*
+dust3r/checkpoints/*

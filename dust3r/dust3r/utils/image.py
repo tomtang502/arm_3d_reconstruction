@@ -8,17 +8,9 @@ import os
 import torch
 import numpy as np
 import PIL.Image
-from PIL.ImageOps import exif_transpose
 import torchvision.transforms as tvf
 os.environ["OPENCV_IO_ENABLE_OPENEXR"] = "1"
 import cv2  # noqa
-
-try:
-    from pillow_heif import register_heif_opener  # noqa
-    register_heif_opener()
-    heif_support_enabled = True
-except ImportError:
-    heif_support_enabled = False
 
 ImgNorm = tvf.Compose([tvf.ToTensor(), tvf.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
@@ -54,30 +46,25 @@ def rgb(ftensor, true_shape=None):
         img = (ftensor * 0.5) + 0.5
     return img.clip(min=0, max=1)
 
-def crop_512(im, larger_edge = 512):
-    width, height = im.size
-    cropped_height = (height*larger_edge/width)
-    h_margin = (width-larger_edge)//2
-    v_margin = (height-cropped_height)//2
-    left = h_margin
-    top = v_margin
-    right = width - h_margin
-    bottom = height - v_margin
-    #return im.crop((left, top, right, bottom))
-    return im.crop((0, 0, larger_edge, cropped_height))
 
 def _resize_pil_image(img, long_edge_size):
-    print("haihai")
-    return crop_512(img, larger_edge=long_edge_size)
+    S = max(img.size)
+    if S > long_edge_size:
+        interp = PIL.Image.LANCZOS
+    elif S <= long_edge_size:
+        interp = PIL.Image.BICUBIC
+    new_size = tuple(int(round(x*long_edge_size/S)) for x in img.size)
+    return img.resize(new_size, interp)
 
-# def _resize_pil_image(img, long_edge_size):
-#     S = max(img.size)
-#     if S > long_edge_size:
-#         interp = PIL.Image.LANCZOS
-#     elif S <= long_edge_size:
-#         interp = PIL.Image.BICUBIC
-#     new_size = tuple(int(round(x*long_edge_size/S)) for x in img.size)
-#     return img.resize(new_size, interp)
+# def _resize_pil_image(image, long_edge_size, target_width=512, target_height=384):
+#     width, height = image.size
+    
+#     left = (width - target_width) // 2
+#     top = (height - target_height) // 2
+    
+#     cropped_image = image.crop((left, top, left+target_width, top+target_height))
+#     print(cropped_image.size, "Using center crop")
+#     return cropped_image
 
 
 def load_images(folder_or_list, size, square_ok=False):
@@ -94,16 +81,11 @@ def load_images(folder_or_list, size, square_ok=False):
     else:
         raise ValueError(f'bad {folder_or_list=} ({type(folder_or_list)})')
 
-    supported_images_extensions = ['.jpg', '.jpeg', '.png', '.JPG']
-    if heif_support_enabled:
-        supported_images_extensions += ['.heic', '.heif']
-    supported_images_extensions = tuple(supported_images_extensions)
-
     imgs = []
     for path in folder_content:
-        if not path.endswith(supported_images_extensions):
+        if not path.endswith(('.jpg', '.jpeg', '.png', '.JPG')):
             continue
-        img = exif_transpose(PIL.Image.open(os.path.join(root, path))).convert('RGB')
+        img = PIL.Image.open(os.path.join(root, path)).convert('RGB')
         W1, H1 = img.size
         if size == 224:
             # resize short side to 224 (then crop)

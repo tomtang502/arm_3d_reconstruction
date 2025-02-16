@@ -19,7 +19,6 @@ Official implementation of `DUSt3R: Geometric 3D Vision Made Easy`
 ```
 
 ## Table of Contents
-
 - [DUSt3R](#dust3r)
   - [Table of Contents](#table-of-contents)
   - [License](#license)
@@ -27,17 +26,13 @@ Official implementation of `DUSt3R: Geometric 3D Vision Made Easy`
     - [Installation](#installation)
     - [Checkpoints](#checkpoints)
     - [Interactive demo](#interactive-demo)
-    - [Interactive demo with docker](#interactive-demo-with-docker)
   - [Usage](#usage)
   - [Training](#training)
     - [Demo](#demo)
     - [Our Hyperparameters](#our-hyperparameters)
 
 ## License
-
-The code is distributed under the CC BY-NC-SA 4.0 License.
-See [LICENSE](LICENSE) for more information.
-
+The code is distributed under the CC BY-NC-SA 4.0 License. See [LICENSE](LICENSE) for more information. 
 ```python
 # Copyright (C) 2024-present Naver Corporation. All rights reserved.
 # Licensed under CC BY-NC-SA 4.0 (non-commercial use only).
@@ -47,7 +42,7 @@ See [LICENSE](LICENSE) for more information.
 
 ### Installation
 
-1. Clone DUSt3R.
+1. Clone DUSt3R
 ```bash
 git clone --recursive https://github.com/naver/dust3r
 cd dust3r
@@ -61,12 +56,10 @@ conda create -n dust3r python=3.11 cmake=3.14.0
 conda activate dust3r 
 conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia  # use the correct version of cuda for your system
 pip install -r requirements.txt
-# Optional: you can also install additional packages to:
-# - add support for HEIC images
-pip install -r requirements_optional.txt
 ```
 
-3. Optional, compile the cuda kernels for RoPE (as in CroCo v2).
+
+3. Optional, compile the cuda kernels for RoPE (as in CroCo v2)
 ```bash
 # DUST3R relies on RoPE positional embeddings for which you can compile some cuda kernels for faster runtime.
 cd croco/models/curope/
@@ -74,7 +67,7 @@ python setup.py build_ext --inplace
 cd ../../../
 ```
 
-4. Download pre-trained model.
+4. Download pre-trained model
 ```bash
 mkdir -p checkpoints/
 wget https://download.europe.naverlabs.com/ComputerVision/DUSt3R/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth -P checkpoints/
@@ -93,18 +86,14 @@ We provide several pre-trained models:
 You can check the hyperparameters we used to train these models in the [section: Our Hyperparameters](#our-hyperparameters)
 
 ### Interactive demo
+In this demo, you should be able run DUSt3R on your machine to reconstruct a scene.  
+First select images that depicts the same scene.  
 
-In this demo, you should be able run DUSt3R on your machine to reconstruct a scene.
-First select images that depicts the same scene.
-
-You can adjust the global alignment schedule and its number of iterations.
-
-> [!NOTE]
-> If you selected one or two images, the global alignment procedure will be skipped (mode=GlobalAlignerMode.PairViewer)
-
-Hit "Run" and wait.
-When the global alignment ends, the reconstruction appears.
-Use the slider "min_conf_thr" to show or remove low confidence areas.
+You can adjust the global alignment schedule and its number of iterations.  
+Note: if you selected one or two images, the global alignment procedure will be skipped (mode=GlobalAlignerMode.PairViewer)  
+Hit "Run" and wait.  
+When the global alignment ends, the reconstruction appears.  
+Use the slider "min_conf_thr" to show or remove low confidence areas.  
 
 ```bash
 python3 demo.py --weights checkpoints/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth
@@ -113,28 +102,6 @@ python3 demo.py --weights checkpoints/DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth
 # Use --local_network to make it accessible on the local network, or --server_name to specify the url manually
 # Use --server_port to change the port, by default it will search for an available port starting at 7860
 # Use --device to use a different device, by default it's "cuda"
-```
-
-### Interactive demo with docker
-
-To run DUSt3R using Docker, including with NVIDIA CUDA support, follow these instructions:
-
-1. **Install Docker**: If not already installed, download and install `docker` and `docker compose` from the [Docker website](https://www.docker.com/get-started).
-
-2. **Install NVIDIA Docker Toolkit**: For GPU support, install the NVIDIA Docker toolkit from the [Nvidia website](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
-
-3. **Build the Docker image and run it**: `cd` into the `./docker` directory and run the following commands: 
-
-```bash
-cd docker
-bash run.sh --with-cuda --model-name="DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth"
-```
-
-Or if you want to run the demo without CUDA support, run the following command:
-
-```bash 
-cd docker
-bash run.sh --model-name="DUSt3R_ViTLarge_BaseDecoder_512_dpt.pth"
 ```
 
 ![demo](assets/demo.jpg)
@@ -227,15 +194,13 @@ if __name__ == '__main__':
 ![matching example on croco pair](assets/matching.jpg)
 
 ## Training
-
-In this section, we present a short demonstration to get started with training DUSt3R.
-At the moment, we didn't release the training datasets, so we're going to download and prepare a subset of [CO3Dv2](https://github.com/facebookresearch/co3d) - [Creative Commons Attribution-NonCommercial 4.0 International](https://github.com/facebookresearch/co3d/blob/main/LICENSE) and launch the training code on it.
-The demo model will be trained for a few epochs on a very small dataset.
-It will not be very good.
+In this section, we present propose a short demonstration to get started with training DUSt3R. At the moment, we didn't release the training datasets, so we're going to download and prepare a subset of [CO3Dv2](https://github.com/facebookresearch/co3d) - [Creative Commons Attribution-NonCommercial 4.0 International](https://github.com/facebookresearch/co3d/blob/main/LICENSE) and launch the training code on it.
+The demo model will be trained for a few epochs on a very small dataset. It will not be very good. 
 
 ### Demo
 
 ```bash
+
 # download and prepare the co3d subset
 mkdir -p data/co3d_subset
 cd data/co3d_subset
@@ -292,7 +257,6 @@ torchrun --nproc_per_node=4 train.py \
 ```
 
 ### Our Hyperparameters
-
 We didn't release the training datasets, but here are the commands we used for training our models:
 
 ```bash
